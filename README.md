@@ -1,4 +1,9 @@
-PA6
+PA6 - Simponopoly
 ===
 
-GUI implementation of PA5
+A GUI implementation of PA5...
+
+Simponopoly is my rendition of a popular board game.
+
+My first project working with the Qt framework!
+
