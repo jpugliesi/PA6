@@ -236,10 +236,10 @@ void CentralWidget::createSpaces(){
     //else for THE MAN and TAX, and GO, and SPACE
     else if(spaces[i]->getName() == "*THE  MAN*"){
       spaces[i]->setAction(new CardAction(theManDeck));
-      guiSpaces[i] = new GUIChestSpace(spaces[i], this, new Deck(), "#5100BA");
+      guiSpaces[i] = new GUIChestSpace(spaces[i], this, new Deck(), "#FFFF00");
     }else if(spaces[i]->getName() == "TAX"){
       spaces[i]->setAction(new MoneyAction(NULL, 100, false, "Woops! Pay tax of $100."));
-      guiSpaces[i] = new GUIChestSpace(spaces[i], this, new Deck(), "#FFFFFF");
+      guiSpaces[i] = new GUIChestSpace(spaces[i], this, new Deck(), "#eeeeee");
     }else if(spaces[i]->getName() == "*Chest*"){
       spaces[i]->setAction(new CardAction(theChestDeck));
       guiSpaces[i] = new GUIChestSpace(spaces[i], this, new Deck(), "#FFBB00");
@@ -298,20 +298,20 @@ void CentralWidget::drawConsole(QGridLayout *grid){
 
 //fill up array of unique colors for spaces
 void CentralWidget::occupyColorsArray(){
-  colors[0] = "#0000FF";
+  colors[0] = "#0066FF";
   colors[1] = "#FF0000";
   colors[2] = "#01FFFE";
   colors[3] = "#FFA6FE";
   colors[4] = "#FFDB66";
   colors[5] = "#006401";
-  colors[6] = "#010067";
+  colors[6] = "#9900CC";
   colors[7] = "#95003A";
   colors[8] = "#007DB5";
   colors[9] = "#FF00F6";
   colors[10] = "#FFEEE8";
   colors[11] = "#774D00";
   colors[12] = "#90FB92";
-  colors[13] = "#0076FF";
+  colors[13] = "#C266FF";
   colors[14] = "#D5FF00";
   colors[15] = "#FF937E";
   colors[16] = "#6A826C";
