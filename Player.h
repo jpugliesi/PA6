@@ -1,7 +1,7 @@
 //Player.h
 #ifndef PLAYER_H
 #define PLAYER_H
-#include <string>
+#include <QString>
 #include <vector>
 #include "Space.h"
 
@@ -10,7 +10,7 @@ class Space;
 class Player{
 
 	private:
-		std::string piece; //player's chosen piece
+		QString piece; //player's chosen piece
 		int money; //amount of money a player has
 		int currentPosition; //index position of player on the board
 		std::vector<Space*> ownedSpaces;
@@ -32,8 +32,8 @@ class Player{
 		bool getInGame();
 		void toggleInGame();
 
-		void setPiece(std::string newPiece); //sets player's piece to newPiece
-		std::string getPiece(); //returns player's piece
+		void setPiece(QString newPiece); //sets player's piece to newPiece
+		QString getPiece(); //returns player's piece
 
 		int getMoney(); //returns amount of money player has
 		bool hasMoney(); //returns true if player has money, false otherwise

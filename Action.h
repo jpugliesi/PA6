@@ -1,6 +1,6 @@
 #ifndef ACTION_H
 #define ACTION_H
-#include <string>
+#include <QString>
 #include "Player.h"
 
 class Player;
@@ -8,8 +8,8 @@ class Player;
 class Action{
 
 	protected:
-		std::string name; //name of the action
-		std::string description;
+		QString name; //name of the action
+		QString description;
 		int value;
 		Player* actingPlayer;
 		Player* recievingPlayer;
@@ -17,12 +17,11 @@ class Action{
 
 		//constructors
 		Action();
-		Action(std::string newName);
-		Action(std::string newName, std::string desc);
+		Action(QString newName);
+		Action(QString newName, QString desc);
 
 		//functions
-		void print_name(); //prints the name of the action
-		std::string getName();
+		QString getName();
 		virtual void executeAction() = 0;
 		virtual void executeAction(Player*) = 0;
 
@@ -35,8 +34,8 @@ class Action{
 		Player* getActingPlayer();
 		Player* getRecievingPlayer();
 
-		void setDescription(std::string);
-		std::string getDescription();
+		void setDescription(QString);
+		QString getDescription();
 
 };
 

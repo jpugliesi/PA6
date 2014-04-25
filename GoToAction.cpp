@@ -15,7 +15,7 @@
 
 	}
 	GoToAction::GoToAction(Player* p, Game_Board* board, 
-							Space* space, std::string desc) : Action("GoToAction", desc) {
+							Space* space, QString desc) : Action("GoToAction", desc) {
 
 		Action::setActingPlayer(p);
 		theBoard = board;
@@ -32,7 +32,7 @@
 
 		player->setPosition(newSpace->getSpaceIndex());
 		if(description != ""){
-			std::cout << description << std::endl;
+			// std::cout << description << std::endl;
 		}
 		if(player->didPassGo()){
 			MoneyAction passGo(player, 200, true, "You passed Go. Collect $200.");
@@ -40,7 +40,7 @@
 			passGo.executeAction();
 		}
 		newSpace->addPlayerToSpace(*player);
-		std::cout << player->getPiece() << " moved to " << newSpace->getName() << "!" << std::endl;
+		// std::cout << player->getPiece() << " moved to " << newSpace->getName() << "!" << std::endl;
 		
 	}
 
@@ -53,7 +53,7 @@
 
 		player->setPosition(newSpace->getSpaceIndex());
 		if(description != ""){
-			std::cout << description << std::endl;
+			// std::cout << description << std::endl;
 		}
 		if(player->didPassGo()){
 			MoneyAction passGo(player, 200, true, "You passed Go. Collect $200.");
@@ -61,6 +61,6 @@
 			passGo.executeAction();
 		}
 		newSpace->addPlayerToSpace(*player);
-		std::cout << player->getPiece() << " moved to " << newSpace->getName() << "!" << std::endl;
+		// std::cout << player->getPiece() << " moved to " << newSpace->getName() << "!" << std::endl;
 		
 	}

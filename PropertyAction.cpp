@@ -16,7 +16,7 @@
 		isTransfer = transfer;
 	}
 
-	PropertyAction::PropertyAction(Player* p1, Player* p2, Space* cs, Bank* bank, bool buying, bool isbank, bool transfer, std::string desc) : Action("PropertyAction", desc){
+	PropertyAction::PropertyAction(Player* p1, Player* p2, Space* cs, Bank* bank, bool buying, bool isbank, bool transfer, QString desc) : Action("PropertyAction", desc){
 		Action::setActingPlayer(p1);
 		Action::setRecievingPlayer(p2);
 		currentSpace = cs;
@@ -94,8 +94,8 @@
 		int buyValue = transaction.getAmount();
 		theBank->deposit(buyValue);
 
-		std::cout << player1->getPiece() << " bought " << currentSpace->getName() << " from the Bank for ";
-		std::cout << buyValue << "." << std::endl;
+		// std::cout << player1->getPiece() << " bought " << currentSpace->getName() << " from the Bank for ";
+		// std::cout << buyValue << "." << std::endl;
 
 		player1->addSpace(currentSpace);
 		currentSpace->setOwner(player1);
@@ -108,8 +108,8 @@
 		transaction.executeAction();
 		theBank->withdraw(sellValue);
 
-		std::cout << player1->getPiece() << " sold " << currentSpace->getName() << " back to the Bank for ";
-		std::cout << sellValue << "." << std::endl;
+		// std::cout << player1->getPiece() << " sold " << currentSpace->getName() << " back to the Bank for ";
+		// std::cout << sellValue << "." << std::endl;
 
 		player1->looseSpace(currentSpace->getSpaceIndex());
 		currentSpace->setOwner(NULL);

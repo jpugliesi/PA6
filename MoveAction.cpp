@@ -17,7 +17,7 @@
 		amount = moveValue;
 	}
 
-	MoveAction::MoveAction(Player* p, Game_Board* board, int moveValue, std::string desc) : Action("MoveAction", desc){
+	MoveAction::MoveAction(Player* p, Game_Board* board, int moveValue, QString desc) : Action("MoveAction", desc){
 		Action::setActingPlayer(p);
 		theBoard = board;
 		theBank = theBoard->getBank();
@@ -41,10 +41,10 @@
 
 		player->move(amount);
 		if(description != ""){
-			std::cout << description << std::endl;
+			// std::cout << description << std::endl;
 		}
 		if(player->didPassGo()){
-			std::cout << player->getPiece() << " passed Go! Collect $200." << std::endl;
+			// std::cout << player->getPiece() << " passed Go! Collect $200." << std::endl;
 			MoneyAction payForPassingGo(player, 200, true);
 			theBank->withdraw(200);
 			payForPassingGo.executeAction();
@@ -53,7 +53,7 @@
 		Space *newSpace = theBoard->findSpaceByIndex(index);
 		newSpace->addPlayerToSpace(*player);
 		if(newSpace->getName() != ""){
-			std::cout << player->getPiece() << " moved to " << newSpace->getName() << std::endl;
+			// std::cout << player->getPiece() << " moved to " << newSpace->getName() << std::endl;
 		}
 
 	}
@@ -67,10 +67,10 @@
 
 		player->move(amount);
 		if(description != ""){
-			std::cout << description << std::endl;
+			// std::cout << description << std::endl;
 		}
 		if(player->didPassGo()){
-			std::cout << player->getPiece() << " passed Go! Collect $200." << std::endl;
+			// std::cout << player->getPiece() << " passed Go! Collect $200." << std::endl;
 			MoneyAction payForPassingGo(player, 200, true);
 			theBank->withdraw(200);
 			payForPassingGo.executeAction();
@@ -79,7 +79,7 @@
 		Space *newSpace = theBoard->findSpaceByIndex(index);
 		newSpace->addPlayerToSpace(*player);
 		if(newSpace->getName() != ""){
-			std::cout << player->getPiece() << " moved to " << newSpace->getName() << std::endl;
+			// std::cout << player->getPiece() << " moved to " << newSpace->getName() << std::endl;
 		}
 
 	}

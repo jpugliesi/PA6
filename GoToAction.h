@@ -5,7 +5,7 @@
 #include "Game_Board.h"
 #include "Player.h"
 #include "Bank.h"
-#include <string>
+#include <QString>
 
 class GoToAction : public Action{
 
@@ -17,7 +17,7 @@ class GoToAction : public Action{
 	public:
 		GoToAction();
 		GoToAction(Player*, Game_Board*, Space*);
-		GoToAction(Player*, Game_Board*, Space*, std::string desc);
+		GoToAction(Player*, Game_Board*, Space*, QString desc);
 		void executeAction();
 		void executeAction(Player* p);
 

@@ -1,0 +1,20 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>images/airplane9.png</file>
+    <file>images/clip5.png</file>
+    <file>images/closed18.png</file>
+    <file>images/coliseum1.png</file>
+    <file>images/cup18.png</file>
+    <file>images/detailed.png</file>
+    <file>images/flag20.png</file>
+    <file>images/message3.png</file>
+    <file>images/shopping29.png</file>
+    <file>images/user56.png</file>
+    <file>images/die1.png</file>
+    <file>images/die2.png</file>
+    <file>images/die3.png</file>
+    <file>images/die4.png</file>
+    <file>images/die5.png</file>
+    <file>images/die6.png</file>
+</qresource>
+</RCC>

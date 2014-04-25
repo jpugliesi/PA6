@@ -1,17 +1,18 @@
 #ifndef CARD_H
 #define CARD_H
 
-#include <string>
+#include <QString>
+#include "Action.h"
 
 class Card{
 
 	private:
-		std::string name;
+		QString name;
 		Action* action;
 	public:
 		Card();
-		Card(std::string, Action*);
-		std::string getName();
+		Card(QString, Action*);
+		QString getName();
 		Action* getAction();
 		void setAction(Action* a);
 

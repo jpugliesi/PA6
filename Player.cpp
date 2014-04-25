@@ -22,12 +22,12 @@
 	/***** Functions *****/
 
 	//Sets player's piece to a new string
-	void Player::setPiece(std::string newPiece){
+	void Player::setPiece(QString newPiece){
 		piece = newPiece;
 	}
 
 	//returns the player's piece as a string
-	std::string Player::getPiece(){
+	QString Player::getPiece(){
 		return piece;
 	}
 
@@ -128,7 +128,7 @@
 
 	void Player::printOwnedSpaces(){
 		for(int i = 0; i < ownedSpaces.size(); i++){
-			std::cout << "\t" << ownedSpaces[i]->getName() << std::endl;
+			// std::cout << "\t" << ownedSpaces[i]->getName() << std::endl;
 		}
 	}
 

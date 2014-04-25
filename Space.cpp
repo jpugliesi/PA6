@@ -1,7 +1,7 @@
 //Space.cpp
 #include "Space.h"
 #include "Player.h"
-#include <string>
+#include <QString>
 #include <sstream>
 
 	/***** Constructors *****/
@@ -11,7 +11,7 @@
 		numPlayersOnSpace = 0;
 		//NOT PERMANENT: 
 	}
-	Space::Space(std::string newName, int newNextSpace, bool canOwn, int newValue){
+	Space::Space(QString newName, int newNextSpace, bool canOwn, int newValue){
 		currentPlayers = new Player[4];
 		numPlayersOnSpace = 0;
 		name = newName;
@@ -32,12 +32,12 @@
 	}
 
 	//sets the name of the space
-	void Space::setName(std::string newName){
+	void Space::setName(QString newName){
 		name = newName;
 	}
 
 	//gets the name of the space
-	std::string Space::getName(){
+	QString Space::getName(){
 		return name;
 	}
 
@@ -86,19 +86,7 @@
 		return currentPlayers; //could be wrong, check back that pointers are good
 	}
 
-	//returns a string of the pieces of players currently on the space
-	std::string Space::playersOnSpaceToString(){
-		std::stringstream ss;
-		for(int i = 0; i < 4; i ++){
-			if(currentPlayers[i].getPiece() != ""){
-				ss << currentPlayers[i].getPiece() << " ";
-			}
-		}
-		std::string result = ss.str();
-		return result;
-	}
-
-	std::string Space::getOwner(){
+	QString Space::getOwner(){
 		if(owner == NULL){
 			return "";
 		}

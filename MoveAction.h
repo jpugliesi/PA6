@@ -3,7 +3,7 @@
 #include "Action.h"
 #include "Player.h"
 #include "Game_Board.h"
-#include <string>
+#include <QString>
 
 class MoveAction : public Action{
 
@@ -15,7 +15,7 @@ class MoveAction : public Action{
 		//constructors
 		MoveAction(); //blank moveAction
 		MoveAction(Player* p, Game_Board* theBoard, int moveValue); //create Moveaction of specific name and size
-		MoveAction(Player* p, Game_Board* theBoard, int moveValue, std::string desc); //create Moveaction of specific name and size
+		MoveAction(Player* p, Game_Board* theBoard, int moveValue, QString desc); //create Moveaction of specific name and size
 
 		void executeAction();
 		void executeAction(Player* p);

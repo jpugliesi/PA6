@@ -2,7 +2,7 @@
 #define MONEYACTION_H
 #include "Action.h"
 #include "Player.h"
-#include <string>
+#include <QString>
 
 class MoneyAction : public Action{
 
@@ -15,7 +15,7 @@ class MoneyAction : public Action{
 		//constructors
 		MoneyAction(); //create MoneyAction with name "Default"
 		MoneyAction(Player* p, int amount, bool paying);
-		MoneyAction(Player* p, int amount, bool paying, std::string desc);
+		MoneyAction(Player* p, int amount, bool paying, QString desc);
 
 		//functions
 		int payMoney(Player* p, int amount); //pay p amount sum of money

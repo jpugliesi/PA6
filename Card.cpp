@@ -4,12 +4,12 @@
 		name = "";
 	}
 
-	Card::Card(std::string newName, Action* a){
+	Card::Card(QString newName, Action* a){
 		name = newName;
 		action = a;
 	}
 
-	std::string Card::getName(){
+	QString Card::getName(){
 		return name;
 	}
 

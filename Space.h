@@ -2,7 +2,7 @@
 #ifndef SPACE_H
 #define SPACE_H
 
-#include <string>
+#include <QString>
 #include "Action.h"
 #include "Player.h"
 
@@ -12,8 +12,8 @@ class Action;
 class Space{
 
 	private:
-		std::string name; //name of the space
-		std::string upgrade;
+		QString name; //name of the space
+		QString upgrade;
 		int index;
 		int nextSpace; //index of space that comes after
 		bool ownable; //whether or not the space is able to be owned
@@ -30,18 +30,17 @@ class Space{
 	public:
 		//constructors
 		Space(); //creates ownable space with no players on it
-		Space(std::string name, int nextSpace, bool canOwn, int newValue);
+		Space(QString name, int nextSpace, bool canOwn, int newValue);
 
 		//functions
 		bool isOwnable(); //returns whether or not a space can be owned
 
 		void addPlayerToSpace(Player aPlayer); //adds a player to the currentPlayers array
 		Player* getPlayersOnSpace(); //returns array of players currently on the space
-		std::string playersOnSpaceToString(); //returns string of piece's of players currently on the space
 		void removePlayerFromSpace(Player aPlayer); //removes a player from the space
 
-		void setName(std::string newName);
-		std::string getName();
+		void setName(QString newName);
+		QString getName();
 
 		int getSpaceIndex();
 		int getValue();
@@ -56,7 +55,7 @@ class Space{
 		int getUpgradeValue();
 
 		//may not be useful, currenty unimplemented
-		std::string getOwner();
+		QString getOwner();
 		bool isOwned();
 		Player* getOwnerReference();
 		void setOwner(Player* newOwner);

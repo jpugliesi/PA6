@@ -1,5 +1,5 @@
 #include <iostream>
-#include <string>
+#include <QString>
 #include "Action.h"
 
 	/***** Constructors *****/
@@ -10,11 +10,11 @@
 		description = "";
 	}
 	//Constructor that accepts a string to set as the action's name
-	Action::Action(std::string newName){
+	Action::Action(QString newName){
 		name = newName;
 		description = "";
 	}
-	Action::Action(std::string newName, std::string desc){
+	Action::Action(QString newName, QString desc){
 		name = newName;
 		description = desc;
 	}
@@ -22,11 +22,8 @@
 	/***** Functions *****/
 
 	//Prints out the name of the Action
-	void Action::print_name(){
-		std::cout << name << std::endl;
-	}
 
-	std::string Action::getName(){
+	QString Action::getName(){
 		return name;
 	}
 
@@ -59,10 +56,10 @@
 		return recievingPlayer;
 	}
 
-	void Action::setDescription(std::string desc){
+	void Action::setDescription(QString desc){
 		description = desc;
 	}
 
-	std::string Action::getDescription(){
+	QString Action::getDescription(){
 		return description;
 	}

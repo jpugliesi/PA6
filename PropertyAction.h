@@ -3,7 +3,7 @@
 #include "Player.h"
 #include "Space.h"
 #include "Bank.h"
-#include <string>
+#include <QString>
 
 class PropertyAction : public Action{
 
@@ -26,7 +26,7 @@ class PropertyAction : public Action{
 	public:
 		PropertyAction();
 		PropertyAction(Player* p1, Player* p2, Space* cs, Bank* bank, bool buyingIt, bool isbank, bool transfer);
-		PropertyAction(Player* p1, Player* p2, Space* cs, Bank* bank, bool buyingIt, bool isbank, bool transfer, std::string desc);
+		PropertyAction(Player* p1, Player* p2, Space* cs, Bank* bank, bool buyingIt, bool isbank, bool transfer, QString desc);
 		void executeAction();
 		void executeAction(Player*);
 		int getPropertyActionValue();

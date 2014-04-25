@@ -1,5 +1,5 @@
 #include <iostream>
-#include <string>
+#include <QString>
 #include "MoneyAction.h"
 
 	/***** Constructors *****/
@@ -16,7 +16,7 @@
 
 	}
 
-	MoneyAction::MoneyAction(Player* p, int amt, bool paying, std::string desc) : Action("MoneyAction", desc) { 
+	MoneyAction::MoneyAction(Player* p, int amt, bool paying, QString desc) : Action("MoneyAction", desc) { 
 
 		Action::setActingPlayer(p);
 		amount = amt;
@@ -49,12 +49,12 @@
 		Player* player = Action::getActingPlayer();
 		if(pay){
 			if(description != ""){
-				std::cout << description << std::endl;
+				// std::cout << description << std::endl;
 			}
 			player->giveMoney(amount);
 		}else{
 			if(description != ""){
-				std::cout << description << std::endl;
+				// std::cout << description << std::endl;
 			}
 			player->takeMoney(amount);
 		}
@@ -65,12 +65,12 @@
 		Player* player = Action::getActingPlayer();
 		if(pay){
 			if(description != ""){
-				std::cout << description << std::endl;
+				// std::cout << description << std::endl;
 			}
 			player->giveMoney(amount);
 		}else{
 			if(description != ""){
-				std::cout << description << std::endl;
+				// std::cout << description << std::endl;
 			}
 			player->takeMoney(amount);
 		}
