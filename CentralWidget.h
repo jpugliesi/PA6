@@ -46,6 +46,7 @@ class CentralWidget: public QWidget {
     void drawConsole(QGridLayout *grid);
     void addPlayerIcons();
 
+    void setupSpaceButtonActions(GUIPlayer *p);
     int advanceTurn();
 
 public slots:

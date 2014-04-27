@@ -20,6 +20,9 @@ public:
 	QPoint pointForPlayers();
 	void setPositionInGrid(int, int);
 	QPoint getPositionInGrid();
+
+	QString getName();
+	bool hasAction();
 	int getIndex();
 };
 

@@ -25,6 +25,27 @@ CentralWidget::CentralWidget(std::vector<Player*> *ps, std::vector<GUIPlayer*> *
 
 }
 
+void CentralWidget::setupSpaceButtonActions(GUIPlayer *p){
+  QPushButton** propertyButtons = consoleWidget->getPropertyTransactionButtons();
+  QPushButton* rollDiceButton = consoleWidget->getRollDiceButton();
+  int currentSpaceIndex = p->getPosition();
+  GUISpace *currentSpace = findSpaceByIndex(currentSpaceIndex);
+  if(currentSpace->hasAction()){
+    for(int i = 0; i < 4; i++){
+      propertyButtons[i]->setEnabled(false);
+    }
+  }else if(currentSpace->getName() == "Go" || currentSpace->getName() == ""){
+    for(int i = 0; i < 4; i++){
+      propertyButtons[i]->setEnabled(false);
+    }
+  }else{
+    for(int i = 0; i < 4; i++){
+      propertyButtons[i]->setEnabled(true);
+    }
+  }
+
+}
+
 int CentralWidget::advanceTurn(){
   if(turn == guiPlayers->size() -1){
     turn = 0;
@@ -35,6 +56,8 @@ int CentralWidget::advanceTurn(){
 }
 
 void CentralWidget::playGame(){
+  QPushButton* rollDiceButton = consoleWidget->getRollDiceButton();
+  rollDiceButton->setEnabled(true);
   int* dice = consoleWidget->getDiceValues();
   int d1 = dice[0];
   int d2 = dice[1];
@@ -43,7 +66,9 @@ void CentralWidget::playGame(){
   if(spaceIndex > 39){
     spaceIndex = spaceIndex - 40;
   }
+  // rollDiceButton->setEnabled(false);
   movePlayerToSpace(guiPlayers->at(turn), guiSpaces[spaceIndex]);
+  setupSpaceButtonActions(guiPlayers->at(turn));
   advanceTurn();
 
 }

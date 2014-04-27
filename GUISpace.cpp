@@ -26,6 +26,14 @@ QPoint GUISpace::getPositionInGrid(){
 	return p;
 }
 
+QString GUISpace::getName(){
+	return space->getName();
+}
+
+bool GUISpace::hasAction(){
+	return space->hasAction();
+}
+
 int GUISpace::getIndex(){
 	return space->getSpaceIndex();
 }

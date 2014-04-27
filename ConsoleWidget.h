@@ -52,6 +52,8 @@ public:
 	ConsoleWidget(CentralWidget*, std::vector<GUIPlayer*>, QGridLayout *grid);
 	void setCurrentPlayer(GUIPlayer *p);
 	int* getDiceValues();
+	QPushButton** getPropertyTransactionButtons();
+	QPushButton* getRollDiceButton();
 
 };
 

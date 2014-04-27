@@ -164,3 +164,16 @@ void ConsoleWidget::setCurrentPlayer(GUIPlayer *p){
 	playerIcon->setPixmap(aScaled);
 
 }
+
+QPushButton** ConsoleWidget::getPropertyTransactionButtons(){
+	QPushButton **buttons = new QPushButton*[4];
+	buttons[0] = buyButton;
+	buttons[1] = sellToBankButton;
+	buttons[2] = sellToPlayerButton;
+	buttons[3] = upgradeButton;
+	return buttons;
+}
+
+QPushButton* ConsoleWidget::getRollDiceButton(){
+	return rollDiceButton;
+}
