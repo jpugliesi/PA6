@@ -53,3 +53,14 @@ int GUISpace::getIndex(){
 Space* GUISpace::getSpace(){
 	return space;
 }
+
+int GUISpace::getValue(){
+	return space->getValue();
+}
+
+int GUISpace::getRent(){
+	return space->getRent();
+}
+
+
+

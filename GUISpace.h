@@ -33,6 +33,9 @@ public:
 	Player* getOwnerReference();
 	void setOwner(GUIPlayer *p);
 	bool isOwned();
+
+	int getValue();
+	int getRent();
 };
 
 #endif

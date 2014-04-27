@@ -3,7 +3,10 @@
 
 #include "CentralWidget.h"
 #include "PlayerDock.h"
+#include "GUIDockPlayer.h"
 #include "Bank.h"
+
+class CentralWidget;
 class QWidget;
 class MainWindow : public QMainWindow{
 
@@ -19,17 +22,21 @@ private:
 
 	QDockWidget *pDockLeft;
 	QDockWidget *pDockRight;
-	QWidget *bodyLeft;
-	QWidget *bodyRight;
+	GUIDockPlayer *bodyLeft;
+	GUIDockPlayer *bodyRight;
 
 	QMenu *simponopolyMenu;
 	QAction *exitAct;
+
+	std::vector<GUIPlayer*> pDockLeftPlayers;
+	std::vector<GUIPlayer*> pDockRightPlayers;
 
 
 	void createDockWindows();
 	void createMenuBar();
 public:
 	MainWindow();
+	void updateDockPlayers();
 
 
 };

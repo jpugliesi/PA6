@@ -42,12 +42,14 @@ private:
 	int dice1value;
 	int dice2value;
 
-private slots:
+public slots:
 	void buyProperty();
 	void sellPropertyToBank();
 	void sellPropertyToPlayer();
 	void upgradeProperty();
+	void payRent();
 	void rollDice();
+
 
 public:
 	ConsoleWidget(CentralWidget*, std::vector<GUIPlayer*>, QGridLayout *grid);
@@ -55,6 +57,7 @@ public:
 	int* getDiceValues();
 	QPushButton** getPropertyTransactionButtons();
 	QPushButton* getRollDiceButton();
+	void updateDisplay(QString s);
 
 };
 

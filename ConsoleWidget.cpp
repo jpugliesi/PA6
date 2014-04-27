@@ -1,4 +1,6 @@
 #include "ConsoleWidget.h"
+#include "PropertyAction.h"
+#include "MoneyAction.h"
 #include <iostream>
 
 ConsoleWidget::ConsoleWidget(CentralWidget* cc, std::vector<GUIPlayer*> gs, QGridLayout *grid){
@@ -83,7 +85,11 @@ ConsoleWidget::ConsoleWidget(CentralWidget* cc, std::vector<GUIPlayer*> gs, QGri
 }
 
 void ConsoleWidget::buyProperty(){
-	
+	GUISpace *currentSpace = centralController->findSpaceByIndex(player->getPosition());
+	PropertyAction buyProperty(player->getPlayer(), NULL, currentSpace->getSpace(), centralController->getBank(), true, true, false);
+	buyProperty.executeAction();
+	QString output = "You just bought " + currentSpace->getName() + " for $" + QString::number(currentSpace->getValue());
+	updateDisplay(output);
 }
 
 void ConsoleWidget::sellPropertyToBank(){
@@ -96,6 +102,25 @@ void ConsoleWidget::sellPropertyToPlayer(){
 
 void ConsoleWidget::upgradeProperty(){
 	
+}
+
+void ConsoleWidget::payRent(){
+	GUISpace *currentSpace = centralController->findSpaceByIndex(player->getPosition());
+	Player* owner = currentSpace->getOwnerReference();
+	MoneyAction transaction(owner, currentSpace->getRent(), true);
+	int amount = transaction.getAmount();
+	transaction.executeAction();
+	transaction.takeMoney(player->getPlayer(), amount);
+	transaction.executeAction();
+
+	QString output = "Darn, you have to pay a rent of $";
+	output.append(QString::number(currentSpace->getRent()));
+	updateDisplay(output);
+}
+
+void ConsoleWidget::updateDisplay(QString output){
+	outputWindow->setText(output);
+	centralController->updateDocks();
 }
 
 int* ConsoleWidget::getDiceValues(){

@@ -7,10 +7,11 @@
 #include "GUIPlayer.h"
 #include "IconDialog.h"
 
-CentralWidget::CentralWidget(std::vector<Player*> *ps, std::vector<GUIPlayer*> *gs, Bank *b, QWidget *parent): QWidget(parent) {
+CentralWidget::CentralWidget(std::vector<Player*> *ps, std::vector<GUIPlayer*> *gs, Bank *b, MainWindow *parent)/*: QWidget(parent)*/ {
   setGeometry( 0, 0, 600, 600 );
 
   players = ps;
+  mainWindow = parent;
   guiPlayers = gs;
   theBank = b;
   turn = 0;
@@ -108,7 +109,34 @@ void CentralWidget::playGame(){
 }
 
 void CentralWidget::playTurn(GUIPlayer *p){
+  int currentSpaceIndex = p->getPosition();
+  GUISpace *currentSpace = findSpaceByIndex(currentSpaceIndex);
+  if(currentSpace->hasAction()){
+    //carry out action
+  }else if(currentSpace->getName() == "Go" || currentSpace->getName() == ""){
+    //do nothing (or add 200)
+  }
+  //if space is a property space
+  else{
+    consoleWidget->updateDisplay("Space is unowned!");
+    //if the current space is owned at all
+    if(currentSpace->isOwned()){
+      //if player owns the current space
+      if(currentSpace->getOwnerReference() == p->getPlayer()){
+        //control is from the buttons
+        QString output = "You own the space! Click a button to procede...";
+        consoleWidget->updateDisplay(output);
+      }
+      //else if player does not own the space
+      else{
+        consoleWidget->payRent();
+      }
+    }
+    //else if space is unowned
+    else{
 
+    }
+  }
 }
 
 void CentralWidget::movePlayerToSpace(GUIPlayer* p, GUISpace* gs){
@@ -440,4 +468,8 @@ int CentralWidget::getNumPlayers(){
 
 Bank* CentralWidget::getBank(){
   return theBank;
+}
+
+void CentralWidget::updateDocks(){
+  mainWindow->updateDockPlayers();
 }
