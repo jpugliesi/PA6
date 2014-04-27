@@ -5,20 +5,27 @@ GUISpace::GUISpace(Space* s, QWidget *p) : QWidget(p){
 
 	parent = p;
 	space = s;
+	row = 0;
+	column = 0;
 	nameLabel = new QLabel(this);
 	nameLabel->setText(space->getName());
 }
 
-// void GUISpace::drawSpace(){
-// 	// nameLabel->setAlignment(Qt::AlignCenter);
-// 	// QFont font("Arial", 10, -1, false);
-// 	// nameLabel->setFont(font);
-// 	// nameLabel->setStyleSheet("QLabel{ background-color: white; border: 1px solid black;}");
+QPoint GUISpace::pointForPlayers(){
+	QPoint currentPoint((x() + (geometry().height()/4)), (y() + (geometry().width()/4)));
+	return currentPoint;
+}
 
-// 	// QGridLayout *grid = new QGridLayout(parent);
-// 	// grid->addWidget(nameLabel, 0, 0, 3, 3);
-// 	// grid->setContentsMargins(0, 0, 0, 0); //get rid of margin around the grid
-// 	// grid->setSpacing(0); //get rid of spacing between labels
+void GUISpace::setPositionInGrid(int r, int c){
+	row = r;
+	column = c;
+}
 
-// 	// setLayout(grid);
-// }
+QPoint GUISpace::getPositionInGrid(){
+	QPoint p(row, column);
+	return p;
+}
+
+int GUISpace::getIndex(){
+	return space->getSpaceIndex();
+}

@@ -11,10 +11,26 @@ void GUIPlayer::setPieceImage(QIcon *i){
 	iconLabel->setPixmap(piecePixmap);
 }
 
+QLabel* GUIPlayer::getIcon(){
+	return iconLabel;
+}
+
 QPixmap GUIPlayer::getPieceImage(){
 	return piecePixmap;
 }
 
 int GUIPlayer::getMoney(){
 	return player->getMoney();
+}
+
+void GUIPlayer::setPosition(int i){
+	player->setPosition(i);
+}
+
+void GUIPlayer::setInitialPosition(){
+	player->setInitialPosition();
+}
+
+int GUIPlayer::getPosition(){
+	return player->getCurrentSpace();
 }

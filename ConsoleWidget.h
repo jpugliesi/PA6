@@ -5,12 +5,18 @@
 #include "Die.h"
 #include "GUIPlayer.h"
 #include <vector>
+#include "CentralWidget.h"
+
+class CentralWidget;
 
 class ConsoleWidget : public QWidget{
 
 	Q_OBJECT
 
 private:
+
+	CentralWidget* centralController;
+
 	QLabel *playerIcon;
 	QLabel *playerWithTurn;
 	QLabel *outputWindow;
@@ -32,6 +38,8 @@ private:
 
 	Die *die1;
 	Die *die2;
+	int dice1value;
+	int dice2value;
 
 private slots:
 	void buyProperty();
@@ -41,8 +49,9 @@ private slots:
 	void rollDice();
 
 public:
-	ConsoleWidget(std::vector<GUIPlayer*>, QGridLayout *grid);
+	ConsoleWidget(CentralWidget*, std::vector<GUIPlayer*>, QGridLayout *grid);
 	void setCurrentPlayer(GUIPlayer *p);
+	int* getDiceValues();
 
 };
 

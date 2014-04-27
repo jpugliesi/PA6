@@ -18,8 +18,12 @@ public:
 	GUIPlayer(Player* p);
 	void setPieceImage(QIcon *i);
 	QPixmap getPieceImage();
+	QLabel* getIcon();
 
 	int getMoney();
+	void setPosition(int i);
+	void setInitialPosition();
+	int getPosition();
 
 };
 

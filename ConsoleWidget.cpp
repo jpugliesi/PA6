@@ -1,8 +1,9 @@
 #include "ConsoleWidget.h"
 #include <iostream>
 
-ConsoleWidget::ConsoleWidget(std::vector<GUIPlayer*> gs, QGridLayout *grid){
+ConsoleWidget::ConsoleWidget(CentralWidget* cc, std::vector<GUIPlayer*> gs, QGridLayout *grid){
 
+	centralController = cc;
 	guiPlayers = gs;
 
 	die1 = new Die();
@@ -97,16 +98,23 @@ void ConsoleWidget::upgradeProperty(){
 	
 }
 
+int* ConsoleWidget::getDiceValues(){
+	int* dice = new int[2];
+	dice[0] = dice1value;
+	dice[1] = dice2value;
+	return dice;
+}
+
 void ConsoleWidget::rollDice(){
-	int v1 = die1->rollDie();
-	int v2 = die2->rollDie();
-	int value = v1 + v2;
+	dice1value = die1->rollDie();
+	dice2value = die2->rollDie();
+	int value = dice1value + dice2value;
 
 	QString dieImageName, dieImageName2;
 	QString path1(":/images/");
 	QString path2(":/images/");
 
-	switch(v1){
+	switch(dice1value){
 		case 1: dieImageName = "die1.png";
 				break;
 		case 2: dieImageName = "die2.png";
@@ -121,7 +129,7 @@ void ConsoleWidget::rollDice(){
 				break;
 	}
 
-	switch(v2){
+	switch(dice2value){
 		case 1: dieImageName2 = "die1.png";
 				break;
 		case 2: dieImageName2 = "die2.png";
@@ -145,6 +153,8 @@ void ConsoleWidget::rollDice(){
 	QPixmap dieImage2(path2);
 	QPixmap dieImage2Scaled = dieImage2.scaled(30, 30);
 	die2Label->setPixmap(dieImage2Scaled);
+
+	centralController->playGame();
 }
 
 void ConsoleWidget::setCurrentPlayer(GUIPlayer *p){

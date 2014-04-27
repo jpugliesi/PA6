@@ -8,6 +8,8 @@ class GUISpace : public QWidget{
 	Q_OBJECT
 
 protected:
+	int row;
+	int column;
 	Space* space;
 	QWidget* parent;
 	QLabel* nameLabel;
@@ -15,6 +17,10 @@ protected:
 
 public:
 	GUISpace(Space* s, QWidget *parent = 0);
+	QPoint pointForPlayers();
+	void setPositionInGrid(int, int);
+	QPoint getPositionInGrid();
+	int getIndex();
 };
 
 #endif

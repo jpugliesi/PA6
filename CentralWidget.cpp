@@ -12,7 +12,7 @@ CentralWidget::CentralWidget(std::vector<Player*> *ps, std::vector<GUIPlayer*> *
 
   players = ps;
   guiPlayers = gs;
-
+  turn = 0;
   getPlayerInfo();
   occupyPiecesIcons();
   selectPieces();
@@ -20,7 +20,55 @@ CentralWidget::CentralWidget(std::vector<Player*> *ps, std::vector<GUIPlayer*> *
   createDecks();
   createSpaces();
   drawCenter();
+  addPlayerIcons();
+  playGame();
 
+}
+
+int CentralWidget::advanceTurn(){
+  if(turn == guiPlayers->size() -1){
+    turn = 0;
+  }else{
+    turn++;
+  }
+  return turn;
+}
+
+void CentralWidget::playGame(){
+  int* dice = consoleWidget->getDiceValues();
+  int d1 = dice[0];
+  int d2 = dice[1];
+  int value = d1 + d2;
+  int spaceIndex = guiPlayers->at(turn)->getPosition() + value;
+  if(spaceIndex > 39){
+    spaceIndex = spaceIndex - 40;
+  }
+  movePlayerToSpace(guiPlayers->at(turn), guiSpaces[spaceIndex]);
+  advanceTurn();
+
+}
+
+void CentralWidget::movePlayerToSpace(GUIPlayer* p, GUISpace* gs){
+  QPoint movePoint = gs->getPositionInGrid();
+  int x = movePoint.x();
+  int y = movePoint.y();
+  p->setPosition(gs->getIndex());
+  QLabel *playerIcon = p->getIcon();
+  grid->addWidget(playerIcon, x, y, 1, 1);
+}
+
+void CentralWidget::addPlayerIcons(){
+  //find the Go Space
+  GUISpace *go = findSpaceByIndex(0);
+  for(int i = 0; i < guiPlayers->size(); i++){
+    guiPlayers->at(i)->setInitialPosition();
+    movePlayerToSpace(guiPlayers->at(i), go);
+  }
+
+}
+
+GUISpace* CentralWidget::findSpaceByIndex(int i){
+  return guiSpaces[i];
 }
 
 void CentralWidget::occupyPiecesIcons(){
@@ -224,6 +272,7 @@ void CentralWidget::createSpaces(){
   spaces[38] = new Space("TAX", 39, false, 0);
   spaces[39] = new Space("San Fran", 0, true, 500);
 
+  //create GUISpaces to print to board
   int propertyCount = 0;
   for(int i = 0; i < 40; i++){
     if(spaces[i]->isOwnable()){
@@ -257,7 +306,7 @@ void CentralWidget::createSpaces(){
 void CentralWidget::drawCenter(){
 
   //fills the screen with the appropriate squares in a box
-  QGridLayout *grid = new QGridLayout(this->parentWidget());
+  grid = new QGridLayout(this->parentWidget());
   int row = 0, column = 0, diff1 = 12, diff2 = 22;
   for(int i = 0; i < 40; i++){
     GUISpace *aSpace = guiSpaces[i];
@@ -277,6 +326,7 @@ void CentralWidget::drawCenter(){
       column = 0;
       diff2 += 2;
     }
+    guiSpaces[i]->setPositionInGrid(row, column);
     grid->addWidget(guiSpaces[i], row, column, 1, 1);
   }
 
@@ -289,7 +339,7 @@ void CentralWidget::drawCenter(){
 }
 
 void CentralWidget::drawConsole(QGridLayout *grid){
-  consoleWidget = new ConsoleWidget(*guiPlayers, grid);
+  consoleWidget = new ConsoleWidget(this, *guiPlayers, grid);
 
   //a test, fix for dynamic play!
   consoleWidget->setCurrentPlayer(guiPlayers->at(0));
