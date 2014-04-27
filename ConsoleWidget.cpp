@@ -2,6 +2,7 @@
 #include "PropertyAction.h"
 #include "MoneyAction.h"
 #include <iostream>
+#include "GUIPropertySpace.h"
 
 ConsoleWidget::ConsoleWidget(CentralWidget* cc, std::vector<GUIPlayer*> gs, QGridLayout *grid){
 
@@ -89,18 +90,44 @@ void ConsoleWidget::buyProperty(){
 	PropertyAction buyProperty(player->getPlayer(), NULL, currentSpace->getSpace(), centralController->getBank(), true, true, false);
 	buyProperty.executeAction();
 	QString output = "You just bought " + currentSpace->getName() + " for $" + QString::number(currentSpace->getValue());
+	output.append("\nIt is now Player " + QString::number(centralController->getNextTurn() + 1) + "'s turn.");
+	QPushButton** buttons = getPropertyTransactionButtons();
+	for(int i = 0; i< 4; i++){
+		buttons[i]->setEnabled(false);
+	} 
 	updateDisplay(output);
 }
 
 void ConsoleWidget::sellPropertyToBank(){
-	
+	GUISpace *currentSpace = centralController->findSpaceByIndex(player->getPosition());
+	PropertyAction sellBankProperty(player->getPlayer(), NULL, currentSpace->getSpace(), centralController->getBank(), false, true, false);
+	sellBankProperty.executeAction();
+	QString output = "You just sold " + currentSpace->getName() + " to the Bank for $" + QString::number(currentSpace->getValue() * (3./4));
+	output.append("\nIt is now Player " + QString::number(centralController->getNextTurn() + 1) + "'s turn.");
+	QPushButton** buttons = getPropertyTransactionButtons();
+	for(int i = 0; i< 4; i++){
+		buttons[i]->setEnabled(false);
+	} 
+	updateDisplay(output);
 }
 
 void ConsoleWidget::sellPropertyToPlayer(){
+
 	
 }
 
 void ConsoleWidget::upgradeProperty(){
+	GUISpace *currentSpace = centralController->findSpaceByIndex(player->getPosition());
+	int index = currentSpace->getIndex();
+	GUIPropertySpace *ps = dynamic_cast<GUIPropertySpace*>(centralController->findSpaceByIndex(index));
+	ps->upgradeSpace();
+	MoneyAction transaction(player->getPlayer(), currentSpace->getUpgradeValue(), false);
+	transaction.executeAction();
+	centralController->getBank()->deposit(currentSpace->getUpgradeValue());
+	QPushButton** buttons = getPropertyTransactionButtons();
+	for(int i = 0; i< 4; i++){
+		buttons[i]->setEnabled(false);
+	}
 	
 }
 

@@ -11,10 +11,12 @@ private:
 	QLabel* upgradeLabel;
 	QLabel* blankSpaceLabel;
 	QString color;
+	QGridLayout *grid;
 	void drawSpace();
 
 public:
 	GUIPropertySpace(Space* s, QWidget *parent = 0, QString color = "#FFFFFF");
+	void upgradeSpace();
 
 };
 

@@ -65,6 +65,8 @@ public slots:
     GUISpace* findSpaceByIndex(int i);
     Bank* getBank();
     void updateDocks();
+    int getTurn();
+    int getNextTurn();
 
 };
 

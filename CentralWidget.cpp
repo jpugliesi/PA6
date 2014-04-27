@@ -118,7 +118,6 @@ void CentralWidget::playTurn(GUIPlayer *p){
   }
   //if space is a property space
   else{
-    consoleWidget->updateDisplay("Space is unowned!");
     //if the current space is owned at all
     if(currentSpace->isOwned()){
       //if player owns the current space
@@ -134,7 +133,7 @@ void CentralWidget::playTurn(GUIPlayer *p){
     }
     //else if space is unowned
     else{
-
+      consoleWidget->updateDisplay("Space is unowned!");
     }
   }
 }
@@ -461,7 +460,6 @@ void CentralWidget::occupyColorsArray(){
 
 }
 
-
 int CentralWidget::getNumPlayers(){
   return numPlayers;
 }
@@ -472,4 +470,26 @@ Bank* CentralWidget::getBank(){
 
 void CentralWidget::updateDocks(){
   mainWindow->updateDockPlayers();
+}
+
+int CentralWidget::getTurn(){
+  return turn;
+}
+
+int CentralWidget::getNextTurn(){
+  int tmpTurn = turn;
+  for(int i = 0; i < guiPlayers->size(); i++){
+    //looking at the next turn, not going out of bounds on guiPlayers array
+    if(tmpTurn == guiPlayers->size()-1){
+      tmpTurn = 0;
+    }else{
+      tmpTurn = tmpTurn + 1;
+    }
+
+    //if the player is in the game, it is their turn
+    if(guiPlayers->at(tmpTurn)->isInGame()){
+      return tmpTurn;
+    }
+  }
+  return tmpTurn;
 }

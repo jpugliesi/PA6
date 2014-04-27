@@ -23,7 +23,7 @@ void GUIPropertySpace::drawSpace(){
 	blankSpaceLabel = new QLabel(this);
 	blankSpaceLabel->setStyleSheet("QLabel { background-color : white; border:1px solid black;}");
 
-	QGridLayout *grid = new QGridLayout(parent);
+	grid = new QGridLayout(parent);
 	grid->addWidget(nameLabel, 0, 0, 1, 2);
 	grid->addWidget(upgradeLabel, 0, 2, 1, 1);
 	grid->addWidget(blankSpaceLabel, 1, 0, 2, 3);
@@ -32,4 +32,11 @@ void GUIPropertySpace::drawSpace(){
 
 	setLayout(grid);
 }
-	
+
+void GUIPropertySpace::upgradeSpace(){
+	GUISpace::upgradeSpace();
+	QPixmap house = QPixmap(":/images/upgradeHouse.png");
+	QRect box = grid->cellRect(0, 2);
+	QPixmap houseScaled = house.scaled(box.width(), box.height());
+	upgradeLabel->setPixmap(houseScaled);
+}

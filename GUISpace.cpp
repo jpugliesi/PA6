@@ -62,5 +62,13 @@ int GUISpace::getRent(){
 	return space->getRent();
 }
 
+int GUISpace::getUpgradeValue(){
+	return space->getUpgradeValue();
+}
+
+void GUISpace::upgradeSpace(){
+	space->upgradeSpace();
+}
+
 
 

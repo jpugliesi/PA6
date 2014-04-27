@@ -16,5 +16,6 @@
     <file>images/die4.png</file>
     <file>images/die5.png</file>
     <file>images/die6.png</file>
+    <file>images/upgradeHouse.png</file>
 </qresource>
 </RCC>

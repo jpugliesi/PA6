@@ -36,6 +36,8 @@ public:
 
 	int getValue();
 	int getRent();
+	void upgradeSpace();
+	int getUpgradeValue();
 };
 
 #endif
