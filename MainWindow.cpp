@@ -7,8 +7,9 @@ MainWindow::MainWindow() {
 
   setFixedSize(sizeHint());
 
+  theBank = new Bank;
   //Display the board in the central widget
-  centralWidget = new CentralWidget(&players, &guiPlayers, this);
+  centralWidget = new CentralWidget(&players, &guiPlayers, theBank, this);
   setCentralWidget( centralWidget );
   numPlayers = centralWidget->getNumPlayers();
   std::cout << guiPlayers.size() << std::endl;

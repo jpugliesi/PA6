@@ -83,7 +83,7 @@ ConsoleWidget::ConsoleWidget(CentralWidget* cc, std::vector<GUIPlayer*> gs, QGri
 }
 
 void ConsoleWidget::buyProperty(){
-
+	
 }
 
 void ConsoleWidget::sellPropertyToBank(){

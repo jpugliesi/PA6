@@ -8,6 +8,7 @@
 #include "Deck.h"
 #include "ConsoleWidget.h"
 #include "GUIPlayer.h"
+#include "Bank.h"
 
 class GUISpace;
 class ConsoleWidget;
@@ -27,6 +28,7 @@ class CentralWidget: public QWidget {
     // GUIPlayer** guiPlayers;
     std::vector<Player*> *players;
     std::vector<GUIPlayer*> *guiPlayers;
+    Bank* theBank;
     QIcon *icons[10];
     int availableIcons[10];
     QString colors[40];
@@ -48,15 +50,17 @@ class CentralWidget: public QWidget {
 
     void setupSpaceButtonActions(GUIPlayer *p);
     int advanceTurn();
+    void playTurn(GUIPlayer *p);
 
 public slots:
     void playGame();
     void movePlayerToSpace(GUIPlayer* p, GUISpace* gs);
   
  public:
-    CentralWidget(std::vector<Player*> *a, std::vector<GUIPlayer*> *b, QWidget *parent = 0);
+    CentralWidget(std::vector<Player*> *a, std::vector<GUIPlayer*> *p, Bank* b, QWidget *parent = 0);
     int getNumPlayers();
     GUISpace* findSpaceByIndex(int i);
+    Bank* getBank();
 
 };
 

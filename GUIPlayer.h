@@ -3,7 +3,9 @@
 
 #include <QtGui>
 #include "Player.h"
+#include "GUISpace.h"
 
+class GUISpace;
 class Player;
 class GUIPlayer : public QWidget{
 
@@ -19,11 +21,18 @@ public:
 	void setPieceImage(QIcon *i);
 	QPixmap getPieceImage();
 	QLabel* getIcon();
+	Player* getPlayer();
 
 	int getMoney();
+
 	void setPosition(int i);
 	void setInitialPosition();
 	int getPosition();
+
+	void addSpace(GUISpace* s);
+
+	bool isInGame();
+	void quitGame();
 
 };
 

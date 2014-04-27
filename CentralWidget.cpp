@@ -7,11 +7,12 @@
 #include "GUIPlayer.h"
 #include "IconDialog.h"
 
-CentralWidget::CentralWidget(std::vector<Player*> *ps, std::vector<GUIPlayer*> *gs, QWidget *parent): QWidget(parent) {
+CentralWidget::CentralWidget(std::vector<Player*> *ps, std::vector<GUIPlayer*> *gs, Bank *b, QWidget *parent): QWidget(parent) {
   setGeometry( 0, 0, 600, 600 );
 
   players = ps;
   guiPlayers = gs;
+  theBank = b;
   turn = 0;
   getPlayerInfo();
   occupyPiecesIcons();
@@ -38,19 +39,51 @@ void CentralWidget::setupSpaceButtonActions(GUIPlayer *p){
     for(int i = 0; i < 4; i++){
       propertyButtons[i]->setEnabled(false);
     }
-  }else{
-    for(int i = 0; i < 4; i++){
-      propertyButtons[i]->setEnabled(true);
+  }
+  //if space is a property space
+  else{
+    //if the current space is owned at all
+    if(currentSpace->isOwned()){
+      //if player owns the current space
+      if(currentSpace->getOwnerReference() == p->getPlayer()){
+        //only allow them to sell or upgrade
+        propertyButtons[0]->setEnabled(false); 
+        for(int i = 1; i < 4; i++){
+          propertyButtons[i]->setEnabled(true);
+        }
+      }
+      //else if player does not own the space, disable all transaction buttons
+      else{
+        for(int i = 0; i < 4; i++){
+          propertyButtons[i]->setEnabled(false);
+        }
+      }
+    }
+    //else if space is unwoned, enable buy button only
+    else{
+      propertyButtons[0]->setEnabled(true);
+      for(int i = 1; i < 4; i++){
+        propertyButtons[i]->setEnabled(false);
+      }
     }
   }
-
 }
 
 int CentralWidget::advanceTurn(){
-  if(turn == guiPlayers->size() -1){
-    turn = 0;
-  }else{
-    turn++;
+  int tmpTurn = turn;
+  for(int i = 0; i < guiPlayers->size(); i++){
+    //looking at the next turn, not going out of bounds on guiPlayers array
+    if(tmpTurn == guiPlayers->size()-1){
+      tmpTurn = 0;
+    }else{
+      tmpTurn = tmpTurn + 1;
+    }
+
+    //if the player is in the game, it is their turn
+    if(guiPlayers->at(tmpTurn)->isInGame()){
+      turn = tmpTurn;
+      break;
+    }
   }
   return turn;
 }
@@ -58,6 +91,7 @@ int CentralWidget::advanceTurn(){
 void CentralWidget::playGame(){
   QPushButton* rollDiceButton = consoleWidget->getRollDiceButton();
   rollDiceButton->setEnabled(true);
+  consoleWidget->setCurrentPlayer(guiPlayers->at(turn));
   int* dice = consoleWidget->getDiceValues();
   int d1 = dice[0];
   int d2 = dice[1];
@@ -66,10 +100,14 @@ void CentralWidget::playGame(){
   if(spaceIndex > 39){
     spaceIndex = spaceIndex - 40;
   }
-  // rollDiceButton->setEnabled(false);
-  movePlayerToSpace(guiPlayers->at(turn), guiSpaces[spaceIndex]);
-  setupSpaceButtonActions(guiPlayers->at(turn));
-  advanceTurn();
+  movePlayerToSpace(guiPlayers->at(turn), guiSpaces[spaceIndex]); //move player icon to the appropriate space
+  setupSpaceButtonActions(guiPlayers->at(turn)); //enable/disable appropriate buttons at current space
+  playTurn(guiPlayers->at(turn));
+  advanceTurn(); //move on to the next turn
+
+}
+
+void CentralWidget::playTurn(GUIPlayer *p){
 
 }
 
@@ -398,4 +436,8 @@ void CentralWidget::occupyColorsArray(){
 
 int CentralWidget::getNumPlayers(){
   return numPlayers;
+}
+
+Bank* CentralWidget::getBank(){
+  return theBank;
 }

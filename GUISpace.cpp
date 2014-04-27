@@ -30,10 +30,26 @@ QString GUISpace::getName(){
 	return space->getName();
 }
 
+Player* GUISpace::getOwnerReference(){
+	return space->getOwnerReference();
+}
+
+void GUISpace::setOwner(GUIPlayer* p){
+	space->setOwner(p->getPlayer());
+}
+
+bool GUISpace::isOwned(){
+	return space->isOwned();
+}
+
 bool GUISpace::hasAction(){
 	return space->hasAction();
 }
 
 int GUISpace::getIndex(){
 	return space->getSpaceIndex();
+}
+
+Space* GUISpace::getSpace(){
+	return space;
 }

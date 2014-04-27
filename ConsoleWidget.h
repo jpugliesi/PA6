@@ -7,6 +7,7 @@
 #include <vector>
 #include "CentralWidget.h"
 
+class Bank;
 class CentralWidget;
 
 class ConsoleWidget : public QWidget{

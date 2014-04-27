@@ -34,3 +34,20 @@ void GUIPlayer::setInitialPosition(){
 int GUIPlayer::getPosition(){
 	return player->getCurrentSpace();
 }
+
+Player* GUIPlayer::getPlayer(){
+	return player;
+}
+
+void GUIPlayer::addSpace(GUISpace *s){
+	player->addSpace(s->getSpace());
+}
+
+bool GUIPlayer::isInGame(){
+	return player->getInGame();
+}
+
+void GUIPlayer::quitGame(){
+	player->toggleInGame();
+}
+

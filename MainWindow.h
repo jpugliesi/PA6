@@ -3,6 +3,7 @@
 
 #include "CentralWidget.h"
 #include "PlayerDock.h"
+#include "Bank.h"
 class QWidget;
 class MainWindow : public QMainWindow{
 
@@ -12,6 +13,7 @@ private:
 	//QLabel *boardLabel;
 	std::vector<Player*> players;
 	std::vector<GUIPlayer*> guiPlayers;
+	Bank* theBank;
 	CentralWidget *centralWidget;
 	int numPlayers;
 

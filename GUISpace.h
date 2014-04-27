@@ -3,6 +3,9 @@
 
 #include <QtGui>
 #include "Space.h"
+#include "GUIPlayer.h"
+
+class GUIPlayer;
 
 class GUISpace : public QWidget{
 	Q_OBJECT
@@ -17,6 +20,8 @@ protected:
 
 public:
 	GUISpace(Space* s, QWidget *parent = 0);
+	Space* getSpace();
+
 	QPoint pointForPlayers();
 	void setPositionInGrid(int, int);
 	QPoint getPositionInGrid();
@@ -24,6 +29,10 @@ public:
 	QString getName();
 	bool hasAction();
 	int getIndex();
+
+	Player* getOwnerReference();
+	void setOwner(GUIPlayer *p);
+	bool isOwned();
 };
 
 #endif
