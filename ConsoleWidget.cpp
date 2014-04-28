@@ -3,6 +3,7 @@
 #include "MoneyAction.h"
 #include <iostream>
 #include "GUIPropertySpace.h"
+#include "SelectPlayerDialog.h"
 
 ConsoleWidget::ConsoleWidget(CentralWidget* cc, std::vector<GUIPlayer*> gs, QGridLayout *grid){
 
@@ -112,8 +113,37 @@ void ConsoleWidget::sellPropertyToBank(){
 }
 
 void ConsoleWidget::sellPropertyToPlayer(){
+	GUISpace *currentSpace = centralController->findSpaceByIndex(player->getPosition());
+	QString csName(currentSpace->getName());
+	std::vector<QIcon*> icons;
+	std::vector<GUIPlayer*> gp;
+	for(int i = 0; i < guiPlayers.size(); i++){
+		if((guiPlayers.at(i)->isInGame()) && (guiPlayers.at(i) != player)){
+			gp.push_back(guiPlayers.at(i));
+		 	icons.push_back(new QIcon(guiPlayers.at(i)->getPieceImage()));
+		}
+	}
+	SelectPlayerDialog playersToSelect(icons, this);
+	playersToSelect.exec();
+	int selection = playersToSelect.getChoice();
 
-	
+	QMessageBox::StandardButton confirm;
+	confirm = QMessageBox::question(this, "Do you want to Buy", csName + " for " + QString::number(currentSpace->getValue()) + "?", QMessageBox::Yes|QMessageBox::No);
+	if (confirm == QMessageBox::Yes) {
+	   PropertyAction sellPropertyToPlayer(player->getPlayer(), gp[selection]->getPlayer(), currentSpace->getSpace(), centralController->getBank(), false, false, false);
+	   sellPropertyToPlayer.executeAction();
+	   QString output("Just sold " + csName + " for $" + QString::number(currentSpace->getValue()));
+	   output.append("\nIt is now Player " + QString::number(centralController->getNextTurn() + 1) + "'s turn.");
+	   updateDisplay(output);
+	}else{
+	   updateDisplay("Trade denied.");
+	}
+
+	QPushButton** buttons = getPropertyTransactionButtons();
+	for(int i = 0; i< 4; i++){
+		buttons[i]->setEnabled(false);
+	}
+
 }
 
 void ConsoleWidget::upgradeProperty(){

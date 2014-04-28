@@ -1,57 +1,41 @@
-#include "IconDialog.h"
-#include <QApplication>
-#include <iostream>
+#include "SelectPlayerDialog.h"
 
-IconDialog::IconDialog(QIcon **i, int *available, QWidget *parent): QDialog(parent){
+SelectPlayerDialog::SelectPlayerDialog(std::vector<QIcon*> i, QWidget *p) : QDialog(p){
 	signalMapper = new QSignalMapper(this);
 	connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(setChoice(int)));
 
-	availableIcons = available;
 	pieceIcons = i;
 	choice = -1;
+	iconButtons = new QPushButton*[pieceIcons.size()];
 	createIconSelectorGrid();
 
-	for(int i = 0; i < 10; i++){
+	for(int i = 0; i < pieceIcons.size(); i++){
 		signalMapper->setMapping(iconButtons[i], i);
 		connect(iconButtons[i], SIGNAL(clicked()), signalMapper, SLOT(map()));
 	}
 }
 
-void IconDialog::createIconSelectorGrid(){
+void SelectPlayerDialog::createIconSelectorGrid(){
 	QVBoxLayout *vbox = new QVBoxLayout;
 	QHBoxLayout *iconBox = new QHBoxLayout;
-	for(int i = 0; i < 10; i++){
+	for(int i = 0; i < pieceIcons.size(); i++){
 		iconButtons[i] = new QPushButton(this);
 		iconButtons[i]->setIcon(QIcon(*pieceIcons[i]));
 		iconButtons[i]->setIconSize(QSize(25, 25));
 
-		//disallow duplicate selection
-		if(availableIcons[i] == 1){
-			iconButtons[i]->setEnabled(false);
-		}
 		iconBox->addWidget(iconButtons[i]);
 	}
 
-	QHBoxLayout *accept = new QHBoxLayout;
-
-	reject = new QPushButton("Choose for me");
-	connect(reject, SIGNAL(clicked()), this, SLOT(reject()));
-
-	accept->addWidget(reject);
-
-
-
 	vbox->addLayout(iconBox);
-	vbox->addLayout(accept);
 	setLayout(vbox);
 
 }
 
-void IconDialog::setChoice(int x){
+void SelectPlayerDialog::setChoice(int x){
 	choice = x;
 	this->QDialog::accept();
 }
 
-int IconDialog::getChoice(){
+int SelectPlayerDialog::getChoice(){
 	return choice;
 }

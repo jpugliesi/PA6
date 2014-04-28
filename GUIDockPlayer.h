@@ -7,6 +7,8 @@
 
 class GUIDockPlayer : public QWidget{
 
+	Q_OBJECT
+
 private:
 	QDockWidget *parent;
 	std::vector<GUIPlayer*> *dockPlayers;

@@ -23,7 +23,8 @@ CentralWidget::CentralWidget(std::vector<Player*> *ps, std::vector<GUIPlayer*> *
   createSpaces();
   drawCenter();
   addPlayerIcons();
-  playGame();
+  setupSpaceButtonActions(guiPlayers->at(0));
+  
 
 }
 
@@ -115,8 +116,12 @@ void CentralWidget::playTurn(GUIPlayer *p){
   if(currentSpace->hasAction()){
     //carry out action
   }else if(currentSpace->getName() == "Go"){
+    QString output("You landed on GO! Collect $200");
+    consoleWidget->updateDisplay(output);
     
   }else if(currentSpace->getName() == ""){
+    QString output("Nothing to do here...");
+    consoleWidget->updateDisplay(output);
     //do nothing
   }
   //if space is a property space

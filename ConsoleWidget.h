@@ -52,7 +52,7 @@ public slots:
 
 
 public:
-	ConsoleWidget(CentralWidget*, std::vector<GUIPlayer*>, QGridLayout *grid);
+	ConsoleWidget(CentralWidget* w, std::vector<GUIPlayer*> gs, QGridLayout *grid);
 	void setCurrentPlayer(GUIPlayer *p);
 	int* getDiceValues();
 	QPushButton** getPropertyTransactionButtons();
