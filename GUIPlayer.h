@@ -28,6 +28,7 @@ public:
 	void setPosition(int i);
 	void setInitialPosition();
 	int getPosition();
+	int move(int);
 
 	void addSpace(GUISpace* s);
 

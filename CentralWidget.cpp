@@ -101,6 +101,7 @@ void CentralWidget::playGame(){
   if(spaceIndex > 39){
     spaceIndex = spaceIndex - 40;
   }
+  
   movePlayerToSpace(guiPlayers->at(turn), guiSpaces[spaceIndex]); //move player icon to the appropriate space
   setupSpaceButtonActions(guiPlayers->at(turn)); //enable/disable appropriate buttons at current space
   playTurn(guiPlayers->at(turn));
@@ -113,8 +114,10 @@ void CentralWidget::playTurn(GUIPlayer *p){
   GUISpace *currentSpace = findSpaceByIndex(currentSpaceIndex);
   if(currentSpace->hasAction()){
     //carry out action
-  }else if(currentSpace->getName() == "Go" || currentSpace->getName() == ""){
-    //do nothing (or add 200)
+  }else if(currentSpace->getName() == "Go"){
+    
+  }else if(currentSpace->getName() == ""){
+    //do nothing
   }
   //if space is a property space
   else{
@@ -142,7 +145,15 @@ void CentralWidget::movePlayerToSpace(GUIPlayer* p, GUISpace* gs){
   QPoint movePoint = gs->getPositionInGrid();
   int x = movePoint.x();
   int y = movePoint.y();
+  int oldPos = p->getPosition();
+  int toMove = gs->getIndex();
   p->setPosition(gs->getIndex());
+  if(toMove < oldPos){
+    MoneyAction payForPassingGo(guiPlayers->at(turn)->getPlayer(), 200, true);
+    theBank->withdraw(200);
+    payForPassingGo.executeAction();
+    consoleWidget->updateDisplay("");
+  }
   QLabel *playerIcon = p->getIcon();
   grid->addWidget(playerIcon, x, y, 1, 1);
 }
@@ -360,7 +371,7 @@ void CentralWidget::createSpaces(){
   spaces[36] = new Space("TAX", 37, false, 0);
   spaces[37] = new Space("*THE  MAN*", 38, false, 0); 
   spaces[38] = new Space("TAX", 39, false, 0);
-  spaces[39] = new Space("San Fran", 0, true, 500);
+  spaces[39] = new Space("San Fran", 40, true, 500);
 
   //create GUISpaces to print to board
   int propertyCount = 0;

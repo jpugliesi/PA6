@@ -35,6 +35,10 @@ int GUIPlayer::getPosition(){
 	return player->getCurrentSpace();
 }
 
+int GUIPlayer::move(int num){
+	return player->move(num);
+}
+
 Player* GUIPlayer::getPlayer(){
 	return player;
 }
