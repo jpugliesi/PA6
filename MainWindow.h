@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include "CentralWidget.h"
-#include "PlayerDock.h"
 #include "GUIDockPlayer.h"
 #include "Bank.h"
 

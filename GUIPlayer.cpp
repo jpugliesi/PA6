@@ -1,6 +1,7 @@
 #include "GUIPlayer.h"
 
-GUIPlayer::GUIPlayer(Player* p){
+GUIPlayer::GUIPlayer(Player* p, int i){
+	playerName = new QLabel("Player " + QString::number(i), this);
 	player = p;
 	iconLabel = new QLabel( this );
 	//define iconeLabel picture
@@ -13,6 +14,12 @@ void GUIPlayer::setPieceImage(QIcon *i){
 
 QLabel* GUIPlayer::getIcon(){
 	return iconLabel;
+}
+QLabel* GUIPlayer::getNameLabel(){
+	return playerName;
+}
+QString GUIPlayer::getName(){
+	return playerName->text();
 }
 
 QPixmap GUIPlayer::getPieceImage(){
@@ -44,6 +51,7 @@ Player* GUIPlayer::getPlayer(){
 }
 
 void GUIPlayer::addSpace(GUISpace *s){
+
 	player->addSpace(s->getSpace());
 }
 
@@ -51,7 +59,15 @@ bool GUIPlayer::isInGame(){
 	return player->getInGame();
 }
 
-void GUIPlayer::quitGame(){
+void GUIPlayer::takeOutOfGame(){
 	player->toggleInGame();
+}
+
+std::vector<Space*> GUIPlayer::getAllOwnedSpaces(){
+	return player->getAllOwnedSpaces();
+}
+
+int GUIPlayer::getNumOwnedSpaces(){
+	return player->getNumOwnedSpaces();
 }
 

@@ -126,6 +126,10 @@
 		return ownedSpaces.size();
 	}
 
+	std::vector<Space*> Player::getAllOwnedSpaces(){
+		return ownedSpaces;
+	}
+
 	void Player::printOwnedSpaces(){
 		for(int i = 0; i < ownedSpaces.size(); i++){
 			// std::cout << "\t" << ownedSpaces[i]->getName() << std::endl;

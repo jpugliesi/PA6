@@ -126,6 +126,8 @@ void ConsoleWidget::sellPropertyToPlayer(){
 	SelectPlayerDialog playersToSelect(icons, this);
 	playersToSelect.exec();
 	int selection = playersToSelect.getChoice();
+	qDebug() << selection + " is the selection for " + gp[selection]->getName();
+
 
 	QMessageBox::StandardButton confirm;
 	confirm = QMessageBox::question(this, "Do you want to Buy", csName + " for " + QString::number(currentSpace->getValue()) + "?", QMessageBox::Yes|QMessageBox::No);
@@ -158,6 +160,8 @@ void ConsoleWidget::upgradeProperty(){
 	for(int i = 0; i< 4; i++){
 		buttons[i]->setEnabled(false);
 	}
+	QString output(player->getName() + " upgraded " + currentSpace->getName() + "!");
+	updateDisplay(output);
 	
 }
 

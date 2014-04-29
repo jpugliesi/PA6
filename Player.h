@@ -46,6 +46,7 @@ class Player{
 		bool ownsSpace(Space* theSpace); //returns true if player owns theSpace, false otherwise
 		int getNumOwnedSpaces(); //returns int of number of spaces owned
 		void printOwnedSpaces(); //prints out names of owned properties(spaces)
+		std::vector<Space*> getAllOwnedSpaces();
 };
 
 #endif

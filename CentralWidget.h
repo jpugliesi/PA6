@@ -55,6 +55,8 @@ class CentralWidget: public QWidget {
     int advanceTurn();
     void playTurn(GUIPlayer *p);
 
+    bool isGameOver();
+
 public slots:
     void playGame();
     void movePlayerToSpace(GUIPlayer* p, GUISpace* gs);

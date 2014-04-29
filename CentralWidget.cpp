@@ -3,6 +3,7 @@
 #include "GUIChestSpace.h"
 #include "CardAction.h"
 #include "MoneyAction.h"
+#include "PropertyAction.h"
 #include "Deck.h"
 #include "GUIPlayer.h"
 #include "IconDialog.h"
@@ -51,7 +52,13 @@ void CentralWidget::setupSpaceButtonActions(GUIPlayer *p){
         //only allow them to sell or upgrade
         propertyButtons[0]->setEnabled(false); 
         for(int i = 1; i < 4; i++){
-          propertyButtons[i]->setEnabled(true);
+          if(i == 3 && currentSpace->isUpgraded()){
+            propertyButtons[i]->setEnabled(false);
+          }else if(i == 3){
+            propertyButtons[i]->setEnabled(true);
+          }else{
+            propertyButtons[i]->setEnabled(true);
+          }
         }
       }
       //else if player does not own the space, disable all transaction buttons
@@ -106,7 +113,50 @@ void CentralWidget::playGame(){
   movePlayerToSpace(guiPlayers->at(turn), guiSpaces[spaceIndex]); //move player icon to the appropriate space
   setupSpaceButtonActions(guiPlayers->at(turn)); //enable/disable appropriate buttons at current space
   playTurn(guiPlayers->at(turn));
+
+  for(int i = 0; i < guiPlayers->size(); i++){
+    if(guiPlayers->at(i)->isInGame() && guiPlayers->at(i)->getMoney() <= 0){
+      guiPlayers->at(i)->takeOutOfGame();
+      //transfer all of their property to the bank
+      PropertyAction transferAllProperty(guiPlayers->at(i)->getPlayer(), NULL, NULL, theBank, false, true, true);
+      transferAllProperty.executeAction();
+
+      QString output(guiPlayers->at(i)->getName() + " is out of money. They have lost the game! Bank takes ownership of all of their property!");
+      grid->removeWidget(guiPlayers->at(i)->getIcon());
+      delete guiPlayers->at(i)->getIcon();
+      consoleWidget->updateDisplay(output);
+    }
+  }
+  if(isGameOver()){
+    QMessageBox msgBox;
+    msgBox.setText("The Game is Over.");
+    msgBox.exec();
+    QApplication::quit();
+  }
   advanceTurn(); //move on to the next turn
+
+}
+
+bool CentralWidget::isGameOver(){
+  int numLeft = 0;
+  int winnerIndex = 0;
+  for(int i = 0; i < guiPlayers->size(); i++){
+    if(guiPlayers->at(i)->isInGame()){
+      winnerIndex = i;
+      numLeft++;
+    }
+  }
+  if(numLeft == 1){
+    consoleWidget->updateDisplay("Game is over. The winner is " + guiPlayers->at(winnerIndex)->getName() + "!");
+    QPushButton* rollDiceButton = consoleWidget->getRollDiceButton();
+    rollDiceButton->setEnabled(false);
+    QPushButton** propertyButtons = consoleWidget->getPropertyTransactionButtons();
+    for(int i = 0; i < 4; i++){
+      propertyButtons[i]->setEnabled(false);
+    }
+    return true;
+  }
+  return false;
 
 }
 
@@ -252,7 +302,7 @@ void CentralWidget::getPlayerInfo(){
 
   //guiPlayers = new GUIPlayer*[numPlayers];
   for(int i = 0; i < numPlayers; i++){
-    guiPlayers->push_back(new GUIPlayer(players->at(i)));
+    guiPlayers->push_back(new GUIPlayer(players->at(i), i+1));
   }
 }
 

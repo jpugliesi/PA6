@@ -19,6 +19,7 @@ class Space{
 		bool ownable; //whether or not the space is able to be owned
 		int value;
 		int rent;
+		bool upgraded;
 		Player* owner; //owner of the space
 		Player* currentPlayers; //array of players currently on the space
 		int numPlayersOnSpace; //number of players currently on the space
@@ -52,6 +53,8 @@ class Space{
 		void executeAction();
 
 		void upgradeSpace();
+		bool isUpgraded();
+		void setIsUpgraded(bool val);
 		int getUpgradeValue();
 
 		//may not be useful, currenty unimplemented

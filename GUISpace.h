@@ -38,6 +38,8 @@ public:
 	int getRent();
 	void upgradeSpace();
 	int getUpgradeValue();
+	bool isUpgraded();
+	void setIsUpgraded(bool val);
 };
 
 #endif

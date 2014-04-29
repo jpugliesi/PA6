@@ -4,6 +4,7 @@
 #include <QtGui>
 #include "Player.h"
 #include "GUISpace.h"
+#include <vector>
 
 class GUISpace;
 class Player;
@@ -14,13 +15,16 @@ class GUIPlayer : public QWidget{
 private:
 	Player* player;
 	QLabel *iconLabel;
+	QLabel *playerName;
 	QPixmap piecePixmap;
 
 public:
-	GUIPlayer(Player* p);
+	GUIPlayer(Player* p, int i);
 	void setPieceImage(QIcon *i);
 	QPixmap getPieceImage();
 	QLabel* getIcon();
+	QLabel* getNameLabel();
+	QString getName();
 	Player* getPlayer();
 
 	int getMoney();
@@ -31,9 +35,11 @@ public:
 	int move(int);
 
 	void addSpace(GUISpace* s);
+	std::vector<Space*> getAllOwnedSpaces();
+	int getNumOwnedSpaces();
 
 	bool isInGame();
-	void quitGame();
+	void takeOutOfGame();
 
 };
 

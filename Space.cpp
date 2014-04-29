@@ -18,6 +18,7 @@
 		ownable = canOwn;
 		owner = NULL;
 		upgrade = "";
+		upgraded = false;
 		//action = theAction; need to make a copy function for this to work 
 		nextSpace = newNextSpace;
 		index = nextSpace-1;
@@ -114,12 +115,25 @@
 
 	void Space::upgradeSpace(){
 		rent *= 2;
+		upgraded = true;
 		upgrade = owner->getPiece();
 
 	}
 
 	int Space::getUpgradeValue(){
 		return value/2;
+	}
+
+	bool Space::isUpgraded(){
+		return upgraded;
+	}
+
+	void Space::setIsUpgraded(bool val){
+		if(val == false){
+			rent /= 2;
+			upgrade = "";
+		}
+		upgraded = val;
 	}
 
 	void Space::setAction(Action* newAction){

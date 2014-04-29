@@ -12,8 +12,13 @@ class GUIDockPlayer : public QWidget{
 private:
 	QDockWidget *parent;
 	std::vector<GUIPlayer*> *dockPlayers;
-	QLabel *icon;
-	QLabel *money;
+	QLabel **names;
+	QLabel **icons;
+	QLabel **moneyLabels;
+	std::vector<std::vector<QLabel*> > propertyLabels;
+	QVBoxLayout *vMain;
+	QVBoxLayout **subVLayouts;
+	QVBoxLayout **spaceLayouts;
 public:
 	GUIDockPlayer(std::vector<GUIPlayer*> *dp, QDockWidget *p);
 	void update();

@@ -70,5 +70,13 @@ void GUISpace::upgradeSpace(){
 	space->upgradeSpace();
 }
 
+bool GUISpace::isUpgraded(){
+	return space->isUpgraded();
+}
+
+void GUISpace::setIsUpgraded(bool val){
+	space->setIsUpgraded(val);
+}
+
 
 
