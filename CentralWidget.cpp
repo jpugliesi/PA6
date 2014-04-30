@@ -4,6 +4,7 @@
 #include "CardAction.h"
 #include "MoneyAction.h"
 #include "PropertyAction.h"
+#include "GoToAction.h"
 #include "Deck.h"
 #include "GUIPlayer.h"
 #include "IconDialog.h"
@@ -16,13 +17,15 @@ CentralWidget::CentralWidget(std::vector<Player*> *ps, std::vector<GUIPlayer*> *
   guiPlayers = gs;
   theBank = b;
   turn = 0;
+  theManDeck = new Deck();
+  theChestDeck = new Deck();
   getPlayerInfo();
   occupyPiecesIcons();
   selectPieces();
   occupyColorsArray();
-  createDecks();
   createSpaces();
   drawCenter();
+  createDecks();
   addPlayerIcons();
   setupSpaceButtonActions(guiPlayers->at(0));
   
@@ -101,6 +104,7 @@ void CentralWidget::playGame(){
   QPushButton* rollDiceButton = consoleWidget->getRollDiceButton();
   rollDiceButton->setEnabled(true);
   consoleWidget->setCurrentPlayer(guiPlayers->at(turn));
+  //consoleWidget->setNextPlayer(guiPlayers->at(getNextTurn()));
   int* dice = consoleWidget->getDiceValues();
   int d1 = dice[0];
   int d2 = dice[1];
@@ -114,19 +118,19 @@ void CentralWidget::playGame(){
   setupSpaceButtonActions(guiPlayers->at(turn)); //enable/disable appropriate buttons at current space
   playTurn(guiPlayers->at(turn));
 
-  for(int i = 0; i < guiPlayers->size(); i++){
-    if(guiPlayers->at(i)->isInGame() && guiPlayers->at(i)->getMoney() <= 0){
-      guiPlayers->at(i)->takeOutOfGame();
-      //transfer all of their property to the bank
-      PropertyAction transferAllProperty(guiPlayers->at(i)->getPlayer(), NULL, NULL, theBank, false, true, true);
-      transferAllProperty.executeAction();
+  // for(int i = 0; i < guiPlayers->size(); i++){
+  //   if(guiPlayers->at(i)->isInGame() && guiPlayers->at(i)->getMoney() <= 0){
+  //     guiPlayers->at(i)->takeOutOfGame();
+  //     //transfer all of their property to the bank
+  //     PropertyAction transferAllProperty(guiPlayers->at(i)->getPlayer(), NULL, NULL, theBank, false, true, true);
+  //     transferAllProperty.executeAction();
 
-      QString output(guiPlayers->at(i)->getName() + " is out of money. They have lost the game! Bank takes ownership of all of their property!");
-      grid->removeWidget(guiPlayers->at(i)->getIcon());
-      delete guiPlayers->at(i)->getIcon();
-      consoleWidget->updateDisplay(output);
-    }
-  }
+  //     QString output(guiPlayers->at(i)->getName() + " is out of money. They have lost the game! Bank takes ownership of all of their property!");
+  //     grid->removeWidget(guiPlayers->at(i)->getIcon());
+  //     delete guiPlayers->at(i)->getIcon();
+  //     consoleWidget->appendOutput(output);
+  //   }
+  // }
   if(isGameOver()){
     QMessageBox msgBox;
     msgBox.setText("The Game is Over.");
@@ -162,8 +166,32 @@ bool CentralWidget::isGameOver(){
 
 void CentralWidget::playTurn(GUIPlayer *p){
   int currentSpaceIndex = p->getPosition();
+  int possibleNewIndex;
   GUISpace *currentSpace = findSpaceByIndex(currentSpaceIndex);
   if(currentSpace->hasAction()){
+    Action* theAction = currentSpace->getSpace()->getAction();
+    qDebug() << theAction->getDescription();
+    theAction->executeAction(p->getPlayer());
+    possibleNewIndex = p->getPosition();
+    Space* newCurrentSpace = findSpaceByIndex(p->getPosition())->getSpace();
+    consoleWidget->updateDisplay(theAction->getDescription());
+    if(newCurrentSpace->hasAction() && newCurrentSpace->getSpaceIndex() != currentSpace->getSpace()->getSpaceIndex()){
+      theAction = newCurrentSpace->getAction();
+      theAction->executeAction(p->getPlayer());
+      possibleNewIndex = p->getPosition();
+      consoleWidget->appendOutput(theAction->getDescription());
+    }
+    if(possibleNewIndex != currentSpaceIndex){
+      GUISpace *newCurrentSpace = findSpaceByIndex(possibleNewIndex);
+      QPoint movePoint = newCurrentSpace->getPositionInGrid();
+      int x = movePoint.x();
+      int y = movePoint.y();
+      QLabel *playerIcon = p->getIcon();
+      grid->addWidget(playerIcon, x, y, 1, 1);
+    }
+    consoleWidget->appendOutput("Turn over. Next player can roll the dice!");
+
+
     //carry out action
   }else if(currentSpace->getName() == "Go"){
     QString output("You landed on GO! Collect $200");
@@ -192,6 +220,20 @@ void CentralWidget::playTurn(GUIPlayer *p){
     //else if space is unowned
     else{
       consoleWidget->updateDisplay("Space is unowned!");
+    }
+  }
+
+  for(int i = 0; i < guiPlayers->size(); i++){
+    if(guiPlayers->at(i)->isInGame() && guiPlayers->at(i)->getMoney() <= 0){
+      guiPlayers->at(i)->takeOutOfGame();
+      //transfer all of their property to the bank
+      PropertyAction transferAllProperty(guiPlayers->at(i)->getPlayer(), NULL, NULL, theBank, false, true, true);
+      transferAllProperty.executeAction();
+
+      QString output(guiPlayers->at(i)->getName() + " is out of money. They have lost the game! Bank takes ownership of all of their property!");
+      grid->removeWidget(guiPlayers->at(i)->getIcon());
+      delete guiPlayers->at(i)->getIcon();
+      consoleWidget->appendOutput(output);
     }
   }
 }
@@ -308,76 +350,68 @@ void CentralWidget::getPlayerInfo(){
 
 void CentralWidget::createDecks(){
 
-  theManDeck = new Deck();
-  theChestDeck = new Deck();
+  QString description = "You didn't file your damn taxes. Pay THE MAN a fine of $100";
+  theManDeck->addCard(new MoneyAction(NULL, 100, false, description));
+  description = "You were caught J-walking. Pay ticket of $200.";
+  theManDeck->addCard(new MoneyAction(NULL, 200, false, description));
+  description = "You suck! Pay $500.";
+  theManDeck->addCard(new MoneyAction(NULL, 500, true, description));
+  description = "You became a high ranking government official. Collect salary of $150.";
+  theManDeck->addCard(new MoneyAction(NULL, 150, true, description));
+  description = "You jeopordized a top-secret mission. Pay fine of $500";
+  theManDeck->addCard(new MoneyAction(NULL, 500, false, description));
+  description = "THE MAN is watching you. Pay $300 for tin-foil hat.";
+  theManDeck->addCard(new MoneyAction(NULL, 300, false, description));
+  description = "You get a tax write-off. Collect $50.";
+  theManDeck->addCard(new MoneyAction(NULL, 50, true, description));
+  description = "You were caught speeding. Pay ticket of $350.";
+  theManDeck->addCard(new MoneyAction(NULL, 350, false, description));
+  description = "You littered! How dare you!. Pay fine of $500.";
+  theManDeck->addCard(new MoneyAction(NULL, 500, false, description));
+  description = "You lost Ms. America! Pay $400.";
+  theManDeck->addCard(new MoneyAction(NULL, 400, false, description));
+  description = "You got a fat research stipend! Collect $300.";
+  theManDeck->addCard(new MoneyAction(NULL, 300, true, description));
+  description = "You are disliked. Pay $50.";
+  theManDeck->addCard(new MoneyAction(NULL, 50, false, description));
+  description = "You skipped jury duty. Pay fine of $450.";
+  theManDeck->addCard(new MoneyAction(NULL, 450, false, description));
+  description = "You attended jury duty. Collect compensation of $100.";
+  theManDeck->addCard(new MoneyAction(NULL, 100, true, description));
+  description = "THE MAN is poor. Give him $300.";
+  theManDeck->addCard(new MoneyAction(NULL, 300, false, description));
+  description = "You are poor. Collect handout of $10.";
+  theManDeck->addCard(new MoneyAction(NULL, 10, true, description));
+  description = "You are a menace to society. Pay $250!";
+  theManDeck->addCard(new MoneyAction(NULL, 250, false, description));
+  description = "You know too much. Here. Take this and shut up.";
+  theManDeck->addCard(new MoneyAction(NULL, 200, true, description));
+  description = "You skipped paroll. Pay $700";
+  theManDeck->addCard(new MoneyAction(NULL, 700, true, description));
+  description = "You are a good person. Here is $50.";
+  theManDeck->addCard(new MoneyAction(NULL, 50, true, description));
+  description = "You have been exiled to Siberia.";
+  //14 is siberia's index in the gameboard spaces array
+  theManDeck->addCard(new GoToAction(NULL, theBank, NULL, findSpaceByIndex(14)->getSpace(), description));
 
-  // QString description = "You didn't file your damn taxes. Pay THE MAN a fine of $100";
-  // theManDeck->addCard(new MoneyAction(NULL, 100, false, description));
-  // description = "You were caught J-walking. Pay ticket of $200.";
-  // theManDeck->addCard(new MoneyAction(NULL, 200, false, description));
-  // description = "You made a citizen's arrest! Collect reward of $200.";
-  // theManDeck->addCard(new MoneyAction(NULL, 200, true, description));
-  // description = "You became a high ranking government official. Collect salary of $150.";
-  // theManDeck->addCard(new MoneyAction(NULL, 150, true, description));
-  // description = "You jeopordized a top-secret mission. Pay fine of $500";
-  // theManDeck->addCard(new MoneyAction(NULL, 500, false, description));
-  // description = "THE MAN is watching you. Pay $150 for tin-foil hat.";
-  // theManDeck->addCard(new MoneyAction(NULL, 150, false, description));
-  // description = "You get a tax write-off. Collect $50.";
-  // theManDeck->addCard(new MoneyAction(NULL, 50, true, description));
-  // description = "You were caught speeding. Pay ticket of $350.";
-  // theManDeck->addCard(new MoneyAction(NULL, 350, false, description));
-  // description = "You littered! How dare you!. Pay fine of $500.";
-  // theManDeck->addCard(new MoneyAction(NULL, 500, false, description));
-  // description = "You won Ms. America! Collect $400.";
-  // theManDeck->addCard(new MoneyAction(NULL, 400, true, description));
-  // description = "You got a fat research stipend! Collect $300.";
-  // theManDeck->addCard(new MoneyAction(NULL, 300, true, description));
-  // description = "You are disliked. Pay $50.";
-  // theManDeck->addCard(new MoneyAction(NULL, 50, false, description));
-  // description = "You skipped jury duty. Pay fine of $450.";
-  // theManDeck->addCard(new MoneyAction(NULL, 450, false, description));
-  // description = "You attended jury duty. Collect compensation of $100.";
-  // theManDeck->addCard(new MoneyAction(NULL, 100, true, description));
-  // description = "THE MAN is poor. Give him $150.";
-  // theManDeck->addCard(new MoneyAction(NULL, 150, false, description));
-  // description = "You are poor. Collect handout of $100.";
-  // theManDeck->addCard(new MoneyAction(NULL, 100, true, description));
-  // description = "You are a menace to society. Pay $250!";
-  // theManDeck->addCard(new MoneyAction(NULL, 250, false, description));
-  // description = "You know too much. Here. Take this and shut up.";
-  // theManDeck->addCard(new MoneyAction(NULL, 200, true, description));
-  // description = "You are an oil mongol. Respect us! Here's $200";
-  // theManDeck->addCard(new MoneyAction(NULL, 200, true, description));
-  // description = "You are a good person. Here is $50.";
-  // theManDeck->addCard(new MoneyAction(NULL, 50, true, description));
-  // description = "You have been exiled to Siberia.";
-  // //14 is siberia's index in the gameboard spaces array
-  // theManDeck->addCard(new GoToAction(NULL, theBoard, theBoard->findSpaceByIndex(14), description));
+  description = "You won the ugly pagent. Collect $50";
+  theChestDeck->addCard(new MoneyAction(NULL, 50, true, description));
+  description = "You won a trip to Las Vegas!";
+  theChestDeck->addCard(new GoToAction(NULL, theBank, NULL, findSpaceByIndex(25)->getSpace(), description));
+  description = "Pack up and move to El Sob.";
+  theChestDeck->addCard(new GoToAction(NULL, theBank, NULL, findSpaceByIndex(5)->getSpace(), description));
+  description = "Meet THE MAN";
+  theChestDeck->addCard(new GoToAction(NULL, theBank, NULL, findSpaceByIndex(13)->getSpace(), description));
+  description = "They call it Debt Row...";
+  theChestDeck->addCard(new GoToAction(NULL, theBank, NULL, findSpaceByIndex(31)->getSpace(), description));
+  description = "They call it Debt Row...";
+  theChestDeck->addCard(new GoToAction(NULL, theBank, NULL, findSpaceByIndex(31)->getSpace(), description));
+  description = "Pack up and move to Brooklyn.";
+  theChestDeck->addCard(new GoToAction(NULL, theBank, NULL, findSpaceByIndex(12)->getSpace(), description));
 
-  // //cards for chest deck
-  // description = "Advance 3 spaces.";
-  // theChestDeck->addCard(new MoveAction(NULL, theBoard, 3, description));
-  // description = "Advance 20 spaces.";
-  // theChestDeck->addCard(new MoveAction(NULL, theBoard, 20, description));
-  // description = "You won the ugly pagent. Collect $50";
-  // theChestDeck->addCard(new MoneyAction(NULL, 50, true, description));
-  // description = "You won a trip to Las Vegas!";
-  // theChestDeck->addCard(new GoToAction(NULL, theBoard, theBoard->findSpaceByIndex(25), description));
-  // description = "Pack up and move to El Sob.";
-  // theChestDeck->addCard(new GoToAction(NULL, theBoard, theBoard->findSpaceByIndex(5), description));
-  // description = "Meet THE MAN";
-  // theChestDeck->addCard(new GoToAction(NULL, theBoard, theBoard->findSpaceByIndex(13), description));
-  // description = "They call it Debt Row...";
-  // theChestDeck->addCard(new GoToAction(NULL, theBoard, theBoard->findSpaceByIndex(31), description));
-  // description = "They call it Debt Row...";
-  // theChestDeck->addCard(new GoToAction(NULL, theBoard, theBoard->findSpaceByIndex(31), description));
-  // description = "Pack up and move to Brooklyn.";
-  // theChestDeck->addCard(new GoToAction(NULL, theBoard, theBoard->findSpaceByIndex(12), description));
-
-  // //shuffle dem decks
-  // theManDeck->shuffle();
-  // theChestDeck->shuffle();
+  //shuffle dem decks
+  theManDeck->shuffle();
+  theChestDeck->shuffle();
 
 }
 
@@ -427,6 +461,23 @@ void CentralWidget::createSpaces(){
   spaces[37] = new Space("*THE  MAN*", 38, false, 0); 
   spaces[38] = new Space("TAX", 39, false, 0);
   spaces[39] = new Space("San Fran", 40, true, 500);
+
+
+  for(int i = 0; i < 40; i++){
+      if(spaces[i]->isOwnable() || spaces[i]->getName() == ""){
+        spaces[i]->setAction(NULL);
+      }
+      //else for THE MAN and TAX, and GO, and SPACE
+      else if(spaces[i]->getName() == "*THE  MAN*"){
+        spaces[i]->setAction(new CardAction(theManDeck));
+      }else if(spaces[i]->getName() == "TAX"){
+        spaces[i]->setAction(new MoneyAction(NULL, 100, false, "Woops! Pay tax of $100."));
+      }else if(spaces[i]->getName() == "*Chest*"){
+        spaces[i]->setAction(new CardAction(theChestDeck));
+      }else if(spaces[i]->getName() == "Go"){
+        spaces[i]->setAction(NULL);
+      }
+  }
 
   //create GUISpaces to print to board
   int propertyCount = 0;
@@ -499,6 +550,7 @@ void CentralWidget::drawConsole(QGridLayout *grid){
 
   //a test, fix for dynamic play!
   consoleWidget->setCurrentPlayer(guiPlayers->at(0));
+  //consoleWidget->setNextPlayer(guiPlayers->at(1));
 
 }
 

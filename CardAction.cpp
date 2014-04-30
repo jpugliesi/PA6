@@ -7,9 +7,9 @@
 	}
 
 	void CardAction::executeAction(){
-		deck->getAndExecuteCard();
+		Action::setDescription(deck->getAndExecuteCard());
 	}
 
 	void CardAction::executeAction(Player* p){
-		deck->getAndExecuteCard(p);
+		Action::setDescription(deck->getAndExecuteCard(p));
 	}

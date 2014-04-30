@@ -12,12 +12,11 @@ class GoToAction : public Action{
 	private:
 		Space* currentSpace;
 		Space* newSpace;
-		Game_Board* theBoard;
 		Bank* theBank;
 	public:
 		GoToAction();
-		GoToAction(Player*, Game_Board*, Space*);
-		GoToAction(Player*, Game_Board*, Space*, QString desc);
+		GoToAction(Player*, Bank*, Space*, Space*);
+		GoToAction(Player*, Bank*, Space*, Space*, QString desc);
 		void executeAction();
 		void executeAction(Player* p);
 

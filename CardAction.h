@@ -3,6 +3,7 @@
 #define CARDACTION_H
 #include "Action.h"
 #include "Deck.h"
+#include <QString>
 
 class Deck;
 

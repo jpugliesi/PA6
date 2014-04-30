@@ -5,30 +5,28 @@
 	GoToAction::GoToAction() : Action("GoToAction"){
 		
 	}
-	GoToAction::GoToAction(Player* p, Game_Board* board, 
+	GoToAction::GoToAction(Player* p, Bank* bank, Space* cs, 
 							Space* space) : Action("GoToAction") {
 
 		Action::setActingPlayer(p);
-		theBoard = board;
-		theBank = board->getBank();
+		theBank = bank;
 		newSpace = space;
+		currentSpace = cs;
 
 	}
-	GoToAction::GoToAction(Player* p, Game_Board* board, 
+	GoToAction::GoToAction(Player* p, Bank* bank, Space* cs, 
 							Space* space, QString desc) : Action("GoToAction", desc) {
 
 		Action::setActingPlayer(p);
-		theBoard = board;
-		theBank = board->getBank();
+		theBank = bank;
 		newSpace = space;
+		currentSpace = cs;
 
 	}
 
 	void GoToAction::executeAction(){
 		Player* player = Action::getActingPlayer();
 		int index = player->getCurrentSpace();
-		currentSpace = theBoard->findSpaceByIndex(index);
-		currentSpace->removePlayerFromSpace(*player);
 
 		player->setPosition(newSpace->getSpaceIndex());
 		if(description != ""){
@@ -48,8 +46,6 @@
 		Action::setActingPlayer(p);
 		Player* player = Action::getActingPlayer();
 		int index = player->getCurrentSpace();
-		currentSpace = theBoard->findSpaceByIndex(index);
-		currentSpace->removePlayerFromSpace(*player);
 
 		player->setPosition(newSpace->getSpaceIndex());
 		if(description != ""){
@@ -60,7 +56,7 @@
 			theBank->withdraw(200);
 			passGo.executeAction();
 		}
-		newSpace->addPlayerToSpace(*player);
+		//newSpace->addPlayerToSpace(*player);
 		// std::cout << player->getPiece() << " moved to " << newSpace->getName() << "!" << std::endl;
 		
 	}

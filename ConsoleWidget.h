@@ -19,6 +19,7 @@ private:
 	CentralWidget* centralController;
 
 	QLabel *playerIcon;
+	QLabel *upNextPlayerIcon;
 	QLabel *playerWithTurn;
 	QLabel *outputWindow;
 	QPushButton *actionButtons;
@@ -54,10 +55,12 @@ public slots:
 public:
 	ConsoleWidget(CentralWidget* w, std::vector<GUIPlayer*> gs, QGridLayout *grid);
 	void setCurrentPlayer(GUIPlayer *p);
+	void setNextPlayer(GUIPlayer *p);
 	int* getDiceValues();
 	QPushButton** getPropertyTransactionButtons();
 	QPushButton* getRollDiceButton();
 	void updateDisplay(QString s);
+	void appendOutput(QString toAppend);
 
 };
 

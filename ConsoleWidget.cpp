@@ -15,6 +15,7 @@ ConsoleWidget::ConsoleWidget(CentralWidget* cc, std::vector<GUIPlayer*> gs, QGri
 
 	//widgets for current player with turn
 	playerIcon = new QLabel( this );
+	upNextPlayerIcon = new QLabel( this );
 	playerWithTurn = new QLabel("Current Player", this );
 	playerWithTurn->setFont(QFont("Arial", 18));
 	playerWithTurn->setAlignment(Qt::AlignHCenter);
@@ -25,9 +26,9 @@ ConsoleWidget::ConsoleWidget(CentralWidget* cc, std::vector<GUIPlayer*> gs, QGri
 	outputWindow->setAlignment(Qt::AlignCenter);
 	outputWindow->setFont(QFont("Arial", 18));
 	outputWindow->setStyleSheet("QLabel { border: 1px solid black;}");
-	QLabel *propertyName = new QLabel("Space: ");
-	propertyName->setFont(QFont("Arial", 18));
-	propertyName->setAlignment(Qt::AlignCenter);
+	QLabel *upNextPlayerLabel = new QLabel("Up Next: ");
+	upNextPlayerLabel->setFont(QFont("Arial", 18));
+	upNextPlayerLabel->setAlignment(Qt::AlignCenter);
 
 	//add buttons here
 	QVBoxLayout *buttonsBox = new QVBoxLayout;
@@ -77,7 +78,8 @@ ConsoleWidget::ConsoleWidget(CentralWidget* cc, std::vector<GUIPlayer*> gs, QGri
 	//add widgets and layouts to main grid
 	grid->addWidget(playerWithTurn, 1, 1, 1, 3);
 	grid->addWidget(playerIcon, 2, 2, 1, 1);
-	grid->addWidget(propertyName, 4, 1, 1, 3);
+	grid->addWidget(upNextPlayerLabel, 4, 1, 1, 3);
+	grid->addWidget(upNextPlayerIcon, 5, 2, 1, 1);
 	grid->addWidget(outputWindow, 1, 4, 5, 6);
 	grid->addLayout(dieHBox, 7, 1, 3, 3);
 	grid->addLayout(buttonsBox, 7, 4, 4, 6);
@@ -91,7 +93,6 @@ void ConsoleWidget::buyProperty(){
 	PropertyAction buyProperty(player->getPlayer(), NULL, currentSpace->getSpace(), centralController->getBank(), true, true, false);
 	buyProperty.executeAction();
 	QString output = "You just bought " + currentSpace->getName() + " for $" + QString::number(currentSpace->getValue());
-	output.append("\nIt is now Player " + QString::number(centralController->getNextTurn() + 1) + "'s turn.");
 	QPushButton** buttons = getPropertyTransactionButtons();
 	for(int i = 0; i< 4; i++){
 		buttons[i]->setEnabled(false);
@@ -104,7 +105,6 @@ void ConsoleWidget::sellPropertyToBank(){
 	PropertyAction sellBankProperty(player->getPlayer(), NULL, currentSpace->getSpace(), centralController->getBank(), false, true, false);
 	sellBankProperty.executeAction();
 	QString output = "You just sold " + currentSpace->getName() + " to the Bank for $" + QString::number(currentSpace->getValue() * (3./4));
-	output.append("\nIt is now Player " + QString::number(centralController->getNextTurn() + 1) + "'s turn.");
 	QPushButton** buttons = getPropertyTransactionButtons();
 	for(int i = 0; i< 4; i++){
 		buttons[i]->setEnabled(false);
@@ -135,7 +135,6 @@ void ConsoleWidget::sellPropertyToPlayer(){
 	   PropertyAction sellPropertyToPlayer(player->getPlayer(), gp[selection]->getPlayer(), currentSpace->getSpace(), centralController->getBank(), false, false, false);
 	   sellPropertyToPlayer.executeAction();
 	   QString output("Just sold " + csName + " for $" + QString::number(currentSpace->getValue()));
-	   output.append("\nIt is now Player " + QString::number(centralController->getNextTurn() + 1) + "'s turn.");
 	   updateDisplay(output);
 	}else{
 	   updateDisplay("Trade denied.");
@@ -184,6 +183,12 @@ void ConsoleWidget::updateDisplay(QString output){
 	centralController->updateDocks();
 }
 
+void ConsoleWidget::appendOutput(QString toAppend)
+{
+	QString old = outputWindow->text();
+	outputWindow->setText(old + "\n" + toAppend);
+	centralController->updateDocks();
+}
 int* ConsoleWidget::getDiceValues(){
 	int* dice = new int[2];
 	dice[0] = dice1value;
@@ -250,7 +255,13 @@ void ConsoleWidget::setCurrentPlayer(GUIPlayer *p){
 	playerIcon->setPixmap(aScaled);
 
 }
+void ConsoleWidget::setNextPlayer(GUIPlayer *p){
+	player = p;
+	QPixmap a = player->getPieceImage();
+	QPixmap aScaled = a.scaled(60, 60);
+	upNextPlayerIcon->setPixmap(aScaled);
 
+}
 QPushButton** ConsoleWidget::getPropertyTransactionButtons(){
 	QPushButton **buttons = new QPushButton*[4];
 	buttons[0] = buyButton;

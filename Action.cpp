@@ -1,6 +1,7 @@
+#include "Action.h"
 #include <iostream>
 #include <QString>
-#include "Action.h"
+
 
 	/***** Constructors *****/
 

@@ -3,7 +3,9 @@
 #define DECK_H
 #include "Action.h"
 #include <vector>
+#include <QString>
 
+#include <QtGui>
 class Deck{
 
 	private:
@@ -12,9 +14,10 @@ class Deck{
 	public:
 		Deck();
 		void shuffle();
-		void getAndExecuteCard();
-		void getAndExecuteCard(Player* p);
+		QString getAndExecuteCard();
+		QString getAndExecuteCard(Player* p);
 		void addCard(Action* newAction);
+		QString getFrontDescription();
 
 
 };

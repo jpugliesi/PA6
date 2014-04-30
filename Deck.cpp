@@ -9,22 +9,30 @@
 		std::random_shuffle(cards.begin(), cards.end());
 	}
 
-	void Deck::getAndExecuteCard(){
+	QString Deck::getAndExecuteCard(){
 		Action* tmp= cards.front();
 		cards.front()->executeAction();
 		cards.push_back(tmp);
 		cards.erase(cards.begin());
 	}
 
-	void Deck::getAndExecuteCard(Player* p){
+	QString Deck::getAndExecuteCard(Player* p){
 		cards.front()->Action::setActingPlayer(p);
 		Action* tmp= cards.front();
-		cards.front()->executeAction();
+		qDebug() << tmp->getDescription();
+		QString desc = tmp->getDescription();
+		cards.front()->executeAction(p);
 		tmp->setActingPlayer(NULL);
 		cards.push_back(tmp);
 		cards.erase(cards.begin());
+		return desc;
 	}
 
 	void Deck::addCard(Action* newAction){
 		cards.push_back(newAction);
+	}
+
+	QString Deck::getFrontDescription(){
+		qDebug() << cards.front()->getDescription();
+		return cards.front()->getDescription();
 	}
