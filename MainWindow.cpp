@@ -19,7 +19,20 @@ MainWindow::MainWindow() {
 }
 
 void MainWindow::createMenuBar(){
+  resignAct = new QAction(tr("&Resign"), this);
+  connect(resignAct, SIGNAL(triggered()), this, SLOT(resign()));
 
+  exitAct = new QAction(tr("&Quit"), this);
+  connect(exitAct, SIGNAL(triggered()), this, SLOT(QApplication::quit()));
+
+  actionsMenu = menuBar()->addMenu(tr("&File"));
+  actionsMenu->addAction(resignAct);
+  actionsMenu->addAction(exitAct);
+}
+
+void MainWindow::resign(){
+  int turn = centralWidget->getTurn();
+  centralWidget->resign(guiPlayers.at(turn));
 }
 
 void MainWindow::createDockWindows(){

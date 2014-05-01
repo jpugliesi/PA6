@@ -69,6 +69,7 @@ public slots:
     void updateDocks();
     int getTurn();
     int getNextTurn();
+    void resign(GUIPlayer *p);
 
 };
 

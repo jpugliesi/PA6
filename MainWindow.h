@@ -24,11 +24,15 @@ private:
 	GUIDockPlayer *bodyLeft;
 	GUIDockPlayer *bodyRight;
 
-	QMenu *simponopolyMenu;
+	QMenu *actionsMenu;
 	QAction *exitAct;
+	QAction *resignAct;
 
 	std::vector<GUIPlayer*> pDockLeftPlayers;
 	std::vector<GUIPlayer*> pDockRightPlayers;
+
+private slots:
+	void resign();
 
 
 	void createDockWindows();

@@ -133,7 +133,9 @@ void CentralWidget::playGame(){
   // }
   if(isGameOver()){
     QMessageBox msgBox;
-    msgBox.setText("The Game is Over.");
+    QString output("The Game is Over. ");
+    output.append(guiPlayers->at(turn)->getName() + " is the winner!");
+    msgBox.setText(output);
     msgBox.exec();
     QApplication::quit();
   }
@@ -227,8 +229,10 @@ void CentralWidget::playTurn(GUIPlayer *p){
     if(guiPlayers->at(i)->isInGame() && guiPlayers->at(i)->getMoney() <= 0){
       guiPlayers->at(i)->takeOutOfGame();
       //transfer all of their property to the bank
-      PropertyAction transferAllProperty(guiPlayers->at(i)->getPlayer(), NULL, NULL, theBank, false, true, true);
-      transferAllProperty.executeAction();
+      if(p->getNumOwnedSpaces() > 0){
+        PropertyAction transferAllProperty(guiPlayers->at(i)->getPlayer(), NULL, NULL, theBank, false, true, true);
+        transferAllProperty.executeAction();
+      }
 
       QString output(guiPlayers->at(i)->getName() + " is out of money. They have lost the game! Bank takes ownership of all of their property!");
       grid->removeWidget(guiPlayers->at(i)->getIcon());
@@ -610,4 +614,28 @@ int CentralWidget::getNextTurn(){
     }
   }
   return tmpTurn;
+}
+
+void CentralWidget::resign(GUIPlayer* p){
+  p->takeOutOfGame();
+  //transfer all of their property to the bank
+  if(p->getNumOwnedSpaces() > 0){
+    PropertyAction transferAllProperty(p->getPlayer(), NULL, NULL, theBank, false, true, true);
+    transferAllProperty.executeAction();
+  }
+
+  QString output(p->getName() + " has quit the game. Bank takes ownership of all of their property!");
+  grid->removeWidget(p->getIcon());
+  delete p->getIcon();
+  consoleWidget->appendOutput(output);
+  advanceTurn();
+
+  if(isGameOver()){
+    QMessageBox msgBox;
+    QString output("The Game is Over. ");
+    output.append(guiPlayers->at(turn)->getName() + " is the winner!");
+    msgBox.setText(output);
+    msgBox.exec();
+    QApplication::quit();
+  }
 }
