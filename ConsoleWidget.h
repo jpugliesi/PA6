@@ -16,7 +16,9 @@ class ConsoleWidget : public QWidget{
 
 private:
 
-	CentralWidget* centralController;
+	CentralWidget *centralController;
+
+	QGridLayout *grid;
 
 	QLabel *playerIcon;
 	QLabel *upNextPlayerIcon;
@@ -43,6 +45,8 @@ private:
 	int dice1value;
 	int dice2value;
 
+    void checkGameContext();
+
 public slots:
 	void buyProperty();
 	void sellPropertyToBank();
@@ -51,10 +55,10 @@ public slots:
 	void payRent();
 	void rollDice();
 
-
 public:
 	ConsoleWidget(CentralWidget* w, std::vector<GUIPlayer*> gs, QGridLayout *grid);
 	void setCurrentPlayer(GUIPlayer *p);
+	GUIPlayer* getCurrentPlayer();
 	void setNextPlayer(GUIPlayer *p);
 	int* getDiceValues();
 	QPushButton** getPropertyTransactionButtons();

@@ -40,9 +40,13 @@ void GUIDockPlayer::update(){
 	for(int i = 0; i < dockPlayers->size(); i++){
 		qDebug() << dockPlayers->at(i)->getName() + " updated\n";
 		qDebug() << "has " << QString::number(dockPlayers->at(i)->getMoney()) << ".\n";
-		QString playersMoney = "$";
-		playersMoney.append(QString::number(dockPlayers->at(i)->getMoney()));
-		moneyLabels[i]->setText(playersMoney);
+		if(dockPlayers->at(i)->getMoney() > 0){
+			QString playersMoney = "$";
+			playersMoney.append(QString::number(dockPlayers->at(i)->getMoney()));
+			moneyLabels[i]->setText(playersMoney);
+		}else{
+			moneyLabels[i]->setText("");
+		}
 
 		if(dockPlayers->at(i)->isInGame() && dockPlayers->at(i)->getNumOwnedSpaces() != 0){
 			QLayoutItem* item;

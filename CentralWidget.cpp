@@ -29,7 +29,6 @@ CentralWidget::CentralWidget(std::vector<Player*> *ps, std::vector<GUIPlayer*> *
   addPlayerIcons();
   setupSpaceButtonActions(guiPlayers->at(0));
   
-
 }
 
 void CentralWidget::setupSpaceButtonActions(GUIPlayer *p){
@@ -153,7 +152,7 @@ bool CentralWidget::isGameOver(){
     }
   }
   if(numLeft == 1){
-    consoleWidget->updateDisplay("Game is over. The winner is " + guiPlayers->at(winnerIndex)->getName() + "!");
+    consoleWidget->appendOutput("Game is over. The winner is " + guiPlayers->at(winnerIndex)->getName() + "!");
     QPushButton* rollDiceButton = consoleWidget->getRollDiceButton();
     rollDiceButton->setEnabled(false);
     QPushButton** propertyButtons = consoleWidget->getPropertyTransactionButtons();
@@ -191,7 +190,7 @@ void CentralWidget::playTurn(GUIPlayer *p){
       QLabel *playerIcon = p->getIcon();
       grid->addWidget(playerIcon, x, y, 1, 1);
     }
-    consoleWidget->appendOutput("Turn over. Next player can roll the dice!");
+    consoleWidget->appendOutput("\nTurn over. Next player can roll the dice!");
 
 
     //carry out action
@@ -229,7 +228,7 @@ void CentralWidget::playTurn(GUIPlayer *p){
     if(guiPlayers->at(i)->isInGame() && guiPlayers->at(i)->getMoney() <= 0){
       guiPlayers->at(i)->takeOutOfGame();
       //transfer all of their property to the bank
-      if(p->getNumOwnedSpaces() > 0){
+      if(guiPlayers->at(i)->getNumOwnedSpaces() > 0){
         PropertyAction transferAllProperty(guiPlayers->at(i)->getPlayer(), NULL, NULL, theBank, false, true, true);
         transferAllProperty.executeAction();
       }
@@ -243,6 +242,7 @@ void CentralWidget::playTurn(GUIPlayer *p){
 }
 
 void CentralWidget::movePlayerToSpace(GUIPlayer* p, GUISpace* gs){
+
   QPoint movePoint = gs->getPositionInGrid();
   int x = movePoint.x();
   int y = movePoint.y();
@@ -257,6 +257,7 @@ void CentralWidget::movePlayerToSpace(GUIPlayer* p, GUISpace* gs){
   }
   QLabel *playerIcon = p->getIcon();
   grid->addWidget(playerIcon, x, y, 1, 1);
+
 }
 
 void CentralWidget::addPlayerIcons(){
@@ -359,7 +360,7 @@ void CentralWidget::createDecks(){
   description = "You were caught J-walking. Pay ticket of $200.";
   theManDeck->addCard(new MoneyAction(NULL, 200, false, description));
   description = "You suck! Pay $500.";
-  theManDeck->addCard(new MoneyAction(NULL, 500, true, description));
+  theManDeck->addCard(new MoneyAction(NULL, 500, false, description));
   description = "You became a high ranking government official. Collect salary of $150.";
   theManDeck->addCard(new MoneyAction(NULL, 150, true, description));
   description = "You jeopordized a top-secret mission. Pay fine of $500";
@@ -391,7 +392,7 @@ void CentralWidget::createDecks(){
   description = "You know too much. Here. Take this and shut up.";
   theManDeck->addCard(new MoneyAction(NULL, 200, true, description));
   description = "You skipped paroll. Pay $700";
-  theManDeck->addCard(new MoneyAction(NULL, 700, true, description));
+  theManDeck->addCard(new MoneyAction(NULL, 700, false, description));
   description = "You are a good person. Here is $50.";
   theManDeck->addCard(new MoneyAction(NULL, 50, true, description));
   description = "You have been exiled to Siberia.";
@@ -628,7 +629,7 @@ void CentralWidget::resign(GUIPlayer* p){
   grid->removeWidget(p->getIcon());
   delete p->getIcon();
   consoleWidget->appendOutput(output);
-  advanceTurn();
+  // advanceTurn();
 
   if(isGameOver()){
     QMessageBox msgBox;
@@ -638,4 +639,8 @@ void CentralWidget::resign(GUIPlayer* p){
     msgBox.exec();
     QApplication::quit();
   }
+}
+
+GUIPlayer* CentralWidget::getCurrentPlayer(){
+  return consoleWidget->getCurrentPlayer();
 }

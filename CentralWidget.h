@@ -55,21 +55,25 @@ class CentralWidget: public QWidget {
     int advanceTurn();
     void playTurn(GUIPlayer *p);
 
-    bool isGameOver();
-
 public slots:
     void playGame();
     void movePlayerToSpace(GUIPlayer* p, GUISpace* gs);
   
  public:
     CentralWidget(std::vector<Player*> *a, std::vector<GUIPlayer*> *p, Bank* b, MainWindow *parent = 0);
+
     int getNumPlayers();
+    GUIPlayer* getCurrentPlayer();
+
     GUISpace* findSpaceByIndex(int i);
     Bank* getBank();
     void updateDocks();
+
+    void resign(GUIPlayer *p);
+
     int getTurn();
     int getNextTurn();
-    void resign(GUIPlayer *p);
+    bool isGameOver();
 
 };
 

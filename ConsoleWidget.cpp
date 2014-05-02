@@ -5,10 +5,11 @@
 #include "GUIPropertySpace.h"
 #include "SelectPlayerDialog.h"
 
-ConsoleWidget::ConsoleWidget(CentralWidget* cc, std::vector<GUIPlayer*> gs, QGridLayout *grid){
+ConsoleWidget::ConsoleWidget(CentralWidget* cc, std::vector<GUIPlayer*> gs, QGridLayout *g){
 
 	centralController = cc;
 	guiPlayers = gs;
+	grid = g;
 
 	die1 = new Die();
 	die2 = new Die();
@@ -98,6 +99,10 @@ void ConsoleWidget::buyProperty(){
 		buttons[i]->setEnabled(false);
 	} 
 	updateDisplay(output);
+
+	checkGameContext();
+
+	appendOutput("\nTurn over. Next player can roll the dice!");
 }
 
 void ConsoleWidget::sellPropertyToBank(){
@@ -110,6 +115,11 @@ void ConsoleWidget::sellPropertyToBank(){
 		buttons[i]->setEnabled(false);
 	} 
 	updateDisplay(output);
+
+	checkGameContext();
+
+	appendOutput("\nTurn over. Next player can roll the dice!");
+
 }
 
 void ConsoleWidget::sellPropertyToPlayer(){
@@ -125,25 +135,31 @@ void ConsoleWidget::sellPropertyToPlayer(){
 	}
 	SelectPlayerDialog playersToSelect(icons, this);
 	playersToSelect.exec();
-	int selection = playersToSelect.getChoice();
+	int selection = -1;
+	selection = playersToSelect.getChoice();
 	qDebug() << selection + " is the selection for " + gp[selection]->getName();
 
-
-	QMessageBox::StandardButton confirm;
-	confirm = QMessageBox::question(this, "Do you want to Buy", csName + " for " + QString::number(currentSpace->getValue()) + "?", QMessageBox::Yes|QMessageBox::No);
-	if (confirm == QMessageBox::Yes) {
-	   PropertyAction sellPropertyToPlayer(player->getPlayer(), gp[selection]->getPlayer(), currentSpace->getSpace(), centralController->getBank(), false, false, false);
-	   sellPropertyToPlayer.executeAction();
-	   QString output("Just sold " + csName + " for $" + QString::number(currentSpace->getValue()));
-	   updateDisplay(output);
-	}else{
-	   updateDisplay("Trade denied.");
+	if(selection != -1){
+		QMessageBox::StandardButton confirm;
+		confirm = QMessageBox::question(this, "Do you want to Buy", csName + " for " + QString::number(currentSpace->getValue()) + "?", QMessageBox::Yes|QMessageBox::No);
+		if (confirm == QMessageBox::Yes) {
+		   PropertyAction sellPropertyToPlayer(player->getPlayer(), gp[selection]->getPlayer(), currentSpace->getSpace(), centralController->getBank(), false, false, false);
+		   sellPropertyToPlayer.executeAction();
+		   QString output("Just sold " + csName + " for $" + QString::number(currentSpace->getValue()));
+		   updateDisplay(output);
+		}else{
+		   updateDisplay("Trade denied.");
+		}
 	}
 
 	QPushButton** buttons = getPropertyTransactionButtons();
 	for(int i = 0; i< 4; i++){
 		buttons[i]->setEnabled(false);
 	}
+
+	checkGameContext();
+
+	appendOutput("\nTurn over. Next player can roll the dice!");
 
 }
 
@@ -161,6 +177,10 @@ void ConsoleWidget::upgradeProperty(){
 	}
 	QString output(player->getName() + " upgraded " + currentSpace->getName() + "!");
 	updateDisplay(output);
+
+	checkGameContext();
+
+	appendOutput("\nTurn over. Next player can roll the dice!");
 	
 }
 
@@ -176,8 +196,40 @@ void ConsoleWidget::payRent(){
 	QString output = "Darn, you have to pay a rent of $";
 	output.append(QString::number(currentSpace->getRent()));
 	updateDisplay(output);
+
+	checkGameContext();
+
+	appendOutput("\nTurn over. Next player can roll the dice!");
 }
 
+void ConsoleWidget::checkGameContext()
+{
+	for(int i = 0; i < guiPlayers.size(); i++){
+	    if(guiPlayers.at(i)->isInGame() && guiPlayers.at(i)->getMoney() <= 0){
+	      guiPlayers.at(i)->takeOutOfGame();
+	      //transfer all of their property to the bank
+	      if(guiPlayers.at(i)->getNumOwnedSpaces() > 0){
+	        PropertyAction transferAllProperty(guiPlayers.at(i)->getPlayer(), NULL, NULL, centralController->getBank(), false, true, true);
+	        transferAllProperty.executeAction();
+	      }
+
+	      QString output(guiPlayers.at(i)->getName() + " is out of money. They have lost the game! Bank takes ownership of all of their property!");
+	      grid->removeWidget(guiPlayers.at(i)->getIcon());
+	      delete guiPlayers.at(i)->getIcon();
+	      appendOutput(output);
+	    }
+	}
+
+	//check if game is over after that move
+	if(centralController->isGameOver()){
+	    QMessageBox msgBox;
+	    QString output("The Game is Over. ");
+	    output.append(guiPlayers.at(centralController->getTurn())->getName() + " is the winner!");
+	    msgBox.setText(output);
+	    msgBox.exec();
+	    QApplication::quit();
+	}
+}
 void ConsoleWidget::updateDisplay(QString output){
 	outputWindow->setText(output);
 	centralController->updateDocks();
@@ -254,6 +306,9 @@ void ConsoleWidget::setCurrentPlayer(GUIPlayer *p){
 	QPixmap aScaled = a.scaled(60, 60);
 	playerIcon->setPixmap(aScaled);
 
+}
+GUIPlayer* ConsoleWidget::getCurrentPlayer(){
+	return player;
 }
 void ConsoleWidget::setNextPlayer(GUIPlayer *p){
 	player = p;

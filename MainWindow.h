@@ -25,7 +25,6 @@ private:
 	GUIDockPlayer *bodyRight;
 
 	QMenu *actionsMenu;
-	QAction *exitAct;
 	QAction *resignAct;
 
 	std::vector<GUIPlayer*> pDockLeftPlayers;

@@ -142,6 +142,7 @@
 
 	void Player::toggleInGame(){
 		inGame = false;
+		money = 0;
 	}
 
 
